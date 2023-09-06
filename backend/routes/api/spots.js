@@ -116,4 +116,102 @@ router.get("/:spotId", async (req, res, next) => {
   }
 });
 
+// Create a new spot
+
+const validateSpot = [
+  check("address").isString().withMessage("Street address is required"),
+  check("city").isString().withMessage("City is required"),
+  check("state").isString().withMessage("State is required"),
+  check("country").isString().withMessage("Country is required"),
+  check("lat")
+    .not()
+    .isString()
+    .isDecimal()
+    .withMessage("Latitude is not valid"),
+  check("lng")
+    .not()
+    .isString()
+    .isDecimal()
+    .withMessage("Longitude is not valid"),
+  check("name")
+    .isLength({ max: 50 })
+    .isString()
+    .withMessage("Name must be less than 50 characters"),
+  check("description").isString().withMessage("Description is required"),
+  check("price")
+    .not()
+    .isString()
+    .isDecimal()
+    .withMessage("Price per day is required"),
+  handleValidationErrors,
+];
+
+router.post("/", requireAuth, validateSpot, async (req, res) => {
+  const { address, city, state, country, lat, lng, name, description, price } =
+    req.body;
+  const newSpot = await Spot.create({
+    address,
+    city,
+    state,
+    country,
+    lat,
+    lng,
+    name,
+    description,
+    price,
+    ownerId: req.user.id,
+  });
+  res.json(newSpot);
+});
+
+// Delete a spot
+router.delete("/:spotId", requireAuth, async (req, res, next) => {
+  const { spotId } = req.params;
+
+  const delSpot = await Spot.findByPk(spotId);
+
+  if (!delSpot || delSpot.ownerId !== req.user.dataValues.id) {
+    const err = new Error("Spot couldn't be found");
+    err.status = 404;
+    err.message = "Spot couldn't be found";
+    return next(err);
+  }
+
+  await Spot.destroy({
+    where: {
+      id: delSpot.dataValues.id,
+    },
+  });
+
+  return res.json({ message: "Successfully deleted" });
+});
+
+// Edit a spot
+router.put("/:spotId", requireAuth, validateSpot, async (req, res, next) => {
+  const { spotId } = req.params;
+
+  const spot = await Spot.findByPk(spotId);
+
+  if (!spot || spot.ownerId !== req.user.dataValues.id) {
+    const err = new Error("Spot couldn't be found");
+    err.status = 404;
+    err.message = "Spot couldn't be found";
+    return next(err);
+  }
+
+  await Spot.update(
+    {
+      ...req.body,
+    },
+    {
+      where: {
+        id: spotId,
+      },
+    }
+  );
+
+  const newSpot = await Spot.findByPk(spotId);
+  return res.json(newSpot);
+});
+
 module.exports = router;
