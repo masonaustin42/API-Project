@@ -18,16 +18,15 @@ module.exports = (sequelize, DataTypes) => {
     {
       spotId: { type: DataTypes.INTEGER, allowNull: false },
       url: { type: DataTypes.STRING, allowNull: false },
+<<<<<<< HEAD
       preview: { type: DataTypes.BOOLEAN },
+=======
+      preview: { type: DataTypes.BOOLEAN, default: false },
+>>>>>>> spots-routes
     },
     {
       sequelize,
       modelName: "SpotImage",
-      defaultScope: {
-        attributes: {
-          exclude: ["createdAt", "updatedAt"],
-        },
-      },
     }
   );
   return SpotImage;
