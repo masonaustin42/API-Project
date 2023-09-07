@@ -269,12 +269,13 @@ router.post(
     const { review, stars } = req.body;
 
     const checkExistingReview = await Review.findOne({
-      where: { userId: req.user.dataValues.id },
+      where: { userId: req.user.dataValues.id, spotId },
     });
     if (checkExistingReview) {
       const err = new Error("User already has a review for this spot");
       err.message = "User already has a review for this spot";
-      next(err);
+      err.status = 404;
+      return next(err);
     }
 
     const newReview = await Review.create({
@@ -288,5 +289,28 @@ router.post(
     res.json(newReview);
   }
 );
+
+// add image to a spot
+router.post("/:spotId/images", requireAuth, async (req, res, next) => {
+  const { spotId } = req.params;
+  const { url, preview } = req.body;
+
+  const spot = await Spot.findByPk(spotId);
+
+  if (!spot || spot.ownerId !== req.user.dataValues.id) {
+    const err = new Error("Spot couldn't be found");
+    err.status = 404;
+    err.message = "Spot couldn't be found";
+    return next(err);
+  }
+
+  const newSpotImg = await SpotImage.create({
+    url,
+    preview: preview ? true : false,
+    spotId,
+  });
+
+  return res.json(newSpotImg);
+});
 
 module.exports = router;

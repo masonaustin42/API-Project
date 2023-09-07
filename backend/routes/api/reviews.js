@@ -41,4 +41,88 @@ router.get("/current", requireAuth, async (req, res) => {
   return res.json({ Reviews: reviews });
 });
 
+router.put("/:reviewId", async (req, res, next) => {
+  const { review, stars } = req.body;
+  const id = req.params.reviewId;
+
+  const checkExistingReview = await Review.findOne({
+    where: { userId: req.user.dataValues.id, id },
+  });
+  if (!checkExistingReview) {
+    const err = new Error("Review couldn't be found");
+    err.message = "Review couldn't be found";
+    err.status = 404;
+    return next(err);
+  }
+
+  await Review.update(
+    {
+      review,
+      stars,
+    },
+    {
+      where: { id },
+    }
+  );
+
+  const newReview = await Review.findByPk(id);
+
+  return res.json(newReview);
+});
+
+// Delete a review
+router.delete("/:reviewId", async (req, res, next) => {
+  const id = req.params.reviewId;
+
+  const delReview = await Review.findByPk(id);
+
+  if (!delReview || delReview.userId !== req.user.dataValues.id) {
+    const err = new Error("Review couldn't be found");
+    err.status = 404;
+    err.message = "Review couldn't be found";
+    return next(err);
+  }
+
+  await Review.destroy({
+    where: {
+      id,
+    },
+  });
+
+  return res.json({ message: "Successfully deleted" });
+});
+
+// add image to a review
+router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
+  const { reviewId } = req.params;
+  const { url } = req.body;
+
+  const review = await Review.findByPk(reviewId, {
+    include: ReviewImage,
+  });
+
+  if (!review || review.userId !== req.user.dataValues.id) {
+    const err = new Error("Review couldn't be found");
+    err.status = 404;
+    err.message = "Review couldn't be found";
+    return next(err);
+  }
+
+  if (review.ReviewImages.length >= 10) {
+    const err = new Error(
+      "Maximum number of images for this resource was reached"
+    );
+    err.status = 403;
+    err.message = "Maximum number of images for this resource was reached";
+    return next(err);
+  }
+
+  const reviewImg = await ReviewImage.create({
+    url,
+    reviewId,
+  });
+
+  return res.json(reviewImg);
+});
+
 module.exports = router;
