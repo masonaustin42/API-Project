@@ -12,11 +12,11 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
   const delImg = await ReviewImage.findByPk(id, {
     include: {
       model: Review,
-      attributes: ["ownerId"],
+      attributes: ["userId"],
     },
   });
 
-  if (!delImg || delImg.Review.dataValues.ownerId !== req.user.dataValues.id) {
+  if (!delImg || delImg.Review.dataValues.userId !== req.user.dataValues.id) {
     const err = new Error("Review Image couldn't be found");
     err.status = 404;
     err.message = "Review Image couldn't be found";
