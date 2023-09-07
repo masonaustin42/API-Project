@@ -269,12 +269,13 @@ router.post(
     const { review, stars } = req.body;
 
     const checkExistingReview = await Review.findOne({
-      where: { userId: req.user.dataValues.id },
+      where: { userId: req.user.dataValues.id, spotId },
     });
     if (checkExistingReview) {
       const err = new Error("User already has a review for this spot");
       err.message = "User already has a review for this spot";
-      next(err);
+      err.status = 404;
+      return next(err);
     }
 
     const newReview = await Review.create({
