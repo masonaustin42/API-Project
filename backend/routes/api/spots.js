@@ -97,7 +97,7 @@ router.get("/", validateQuery, async (req, res) => {
   for (let spot of spots) {
     previewImage = await SpotImage.findOne({
       where: {
-        spotId: spot.id,
+        spotId: Number(spot.id),
         preview: true,
       },
       attributes: ["url"],
