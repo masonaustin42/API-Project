@@ -136,7 +136,7 @@ router.get("/current", requireAuth, async (req, res) => {
   });
 
   for (let spot of spots) {
-    previewImage = await SpotImage.findOne({
+    const previewImage = await SpotImage.findOne({
       where: {
         spotId: spot.id,
         preview: true,
@@ -327,7 +327,7 @@ router.get("/:spotId/reviews", async (req, res, next) => {
     err.message = "Spot couldn't be found";
     return next(err);
   }
-  return res.json({ Reviews: reviews });
+  return res.json(reviews);
 });
 
 // post a review for a spot
@@ -347,6 +347,15 @@ router.post(
   async (req, res, next) => {
     const { spotId } = req.params;
     const { review, stars } = req.body;
+
+    const spot = await Spot.findByPk(spotId);
+
+    if (!spot) {
+      const err = new Error("Spot couldn't be found");
+      err.status = 404;
+      err.message = "Spot couldn't be found";
+      return next(err);
+    }
 
     const checkExistingReview = await Review.findOne({
       where: { userId: req.user.dataValues.id, spotId },
@@ -390,7 +399,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
     spotId,
   });
 
-  return res.json(newSpotImg);
+  return res.json({ url: newSpotImg.url });
 });
 
 // get all bookings from spot id
@@ -405,25 +414,30 @@ router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
     return next(err);
   }
 
-  let where;
+  let options;
   if (spot.ownerId === req.user.dataValues.id) {
-    where = {
-      spotId,
+    options = {
+      where: { spotId },
       include: {
         model: User,
         attributes: ["id", "firstName", "lastName"],
       },
     };
   } else {
-    where = {
-      spotId,
+    options = {
+      where: { spotId },
       attributes: ["spotId", "startDate", "endDate"],
     };
   }
 
-  const bookings = await Booking.findAll(where);
+  const bookings = await Booking.findAll(options);
 
-  return res.json(bookings);
+  for (let booking of bookings) {
+    booking.dataValues.startDate = booking.dataValues.startDate.split(" ")[0];
+    booking.dataValues.endDate = booking.dataValues.endDate.split(" ")[0];
+  }
+
+  return res.json({ Bookings: bookings });
 });
 
 validateBooking = [
