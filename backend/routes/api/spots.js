@@ -12,12 +12,87 @@ const {
 
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
+const { Op } = require("sequelize");
 
 const router = express.Router();
 
+const validateQuery = [
+  check("page")
+    .optional()
+    .isInt({ min: 1, max: 10 })
+    .withMessage("Page must be greater than or equal to 1"),
+  check("size")
+    .optional()
+    .isInt({ min: 1, max: 20 })
+    .withMessage("Size must be greater than or equal to 1"),
+  check("minLat")
+    .optional()
+    .isDecimal({ min: -90, max: 90 })
+    .withMessage("Minimum latitude is invalid"),
+  check("maxLat")
+    .optional()
+    .isDecimal({ min: -90, max: 90 })
+    .withMessage("Maximum latitude is invalid"),
+  check("minLng")
+    .optional()
+    .isDecimal({ min: -180, max: 180 })
+    .withMessage("Minimum longitude is invalid"),
+  check("maxLng")
+    .optional()
+    .isDecimal({ min: -180, max: 180 })
+    .withMessage("Maximum longitude is invalid"),
+  check("minPrice")
+    .optional()
+    .isDecimal({ min: 0 })
+    .withMessage("Minimum price must be greater than or equal to 0"),
+  check("maxPrice")
+    .optional()
+    .isDecimal({ min: 0 })
+    .withMessage("Maximum price must be greater than or equal to 0"),
+  handleValidationErrors,
+];
+
 // Get all spots
-router.get("/", async (req, res) => {
-  const spots = await Spot.findAll({});
+router.get("/", validateQuery, async (req, res) => {
+  const { page, size, maxLat, minLat, maxLng, minLng, minPrice, maxPrice } =
+    req.query;
+  let queryFilter = {};
+
+  if (size === undefined) {
+    queryFilter.limit = 20;
+  } else {
+    queryFilter.limit = Number(size);
+  }
+
+  if (page === undefined) {
+    queryFilter.offset = 0;
+  } else {
+    queryFilter.offset = (page - 1) * queryFilter.limit;
+  }
+
+  queryFilter.where = {
+    lng: {
+      [Op.between]: [
+        minLng !== undefined ? minLng : -180,
+        maxLng !== undefined ? maxLng : 180,
+      ],
+    },
+    lat: {
+      [Op.between]: [
+        minLat !== undefined ? minLat : -90,
+        maxLat !== undefined ? maxLat : 90,
+      ],
+    },
+    price: {
+      [Op.between]: [
+        minPrice !== undefined ? minPrice : 0,
+        maxPrice !== undefined ? maxPrice : 1000000000,
+      ],
+    },
+  };
+
+  console.log(queryFilter);
+  const spots = await Spot.findAll(queryFilter);
 
   for (let spot of spots) {
     previewImage = await SpotImage.findOne({
@@ -44,7 +119,11 @@ router.get("/", async (req, res) => {
     spot.dataValues.avgRating = avgRating;
   }
 
-  return res.json({ Spots: spots });
+  return res.json({
+    Spots: spots,
+    page: queryFilter.offset / queryFilter.limit + 1,
+    size: queryFilter.limit,
+  });
 });
 
 // Get all spots owned by the current user
