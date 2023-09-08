@@ -107,7 +107,7 @@ router.get("/", validateQuery, async (req, res) => {
 
     const reviews = await Review.findAndCountAll({
       where: {
-        spotId: spot.id,
+        spotId: Number(spot.id),
       },
       attributes: ["stars"],
     });
