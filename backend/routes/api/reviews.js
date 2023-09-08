@@ -16,7 +16,7 @@ const router = express.Router();
 
 // Get all reviews of current user
 router.get("/current", requireAuth, async (req, res) => {
-  reviews = await Review.findAll({
+  const reviews = await Review.findAll({
     where: {
       userId: req.user.id,
     },
@@ -28,7 +28,7 @@ router.get("/current", requireAuth, async (req, res) => {
       {
         model: Spot,
         attributes: {
-          exclude: ["createdAt", "updatedAt"],
+          exclude: ["createdAt", "updatedAt", "description"],
         },
       },
       {
@@ -37,6 +37,19 @@ router.get("/current", requireAuth, async (req, res) => {
       },
     ],
   });
+  console.log("REVIEWS", reviews.length);
+
+  for (let review of reviews) {
+    const previewImage = await SpotImage.findOne({
+      where: {
+        spotId: review.Spot.dataValues.id,
+        preview: true,
+      },
+      attributes: ["url"],
+    });
+    if (previewImage)
+      review.Spot.dataValues.previewImage = previewImage.dataValues.url;
+  }
 
   return res.json({ Reviews: reviews });
 });
@@ -122,7 +135,7 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
     reviewId,
   });
 
-  return res.json(reviewImg);
+  return res.json({ url: reviewImg.url });
 });
 
 module.exports = router;

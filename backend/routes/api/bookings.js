@@ -17,21 +17,21 @@ router.get("/current", requireAuth, async (req, res) => {
     include: {
       model: Spot,
       attributes: {
-        exclude: ["createdAt", "updatedAt"],
+        exclude: ["createdAt", "updatedAt", "description"],
       },
     },
   });
 
   for (let spot of bookings) {
-    previewImage = await SpotImage.findOne({
+    const previewImage = await SpotImage.findOne({
       where: {
-        spotId: spot.id,
+        spotId: spot.Spot.dataValues.id,
         preview: true,
       },
       attributes: ["url"],
     });
     if (previewImage)
-      spot.dataValues.previewImage = previewImage.dataValues.url;
+      spot.Spot.dataValues.previewImage = previewImage.dataValues.url;
   }
 
   return res.json({ Bookings: bookings });
