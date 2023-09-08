@@ -15,10 +15,22 @@ module.exports = {
         {
           spotId: 1,
           url: "picture1.url",
+          preview: true,
+        },
+        {
+          spotId: 1,
+          url: "picture2.url",
+          preview: false,
         },
         {
           spotId: 2,
           url: "picture2.url",
+          preview: true,
+        },
+        {
+          spotId: 3,
+          url: "picture2.url",
+          preview: true,
         },
       ],
       { validate: true }
