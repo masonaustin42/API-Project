@@ -13,6 +13,7 @@ const {
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { Op } = require("sequelize");
+const e = require("express");
 
 const router = express.Router();
 
@@ -27,28 +28,83 @@ const validateQuery = [
     .withMessage("Size must be greater than or equal to 1"),
   check("minLat")
     .optional()
-    .isDecimal({ min: -90, max: 90 })
+    .isDecimal()
+    .withMessage("Minimum latitude is invalid")
+    .custom((val) => {
+      if (val <= -90 || val >= 90) return false;
+      else return true;
+    })
     .withMessage("Minimum latitude is invalid"),
   check("maxLat")
     .optional()
-    .isDecimal({ min: -90, max: 90 })
-    .withMessage("Maximum latitude is invalid"),
+    .isDecimal()
+    .withMessage("Maximum latitude is invalid")
+    .custom((val) => {
+      if (val <= -90 || val >= 90) return false;
+      else return true;
+    })
+    .withMessage("Maximum latitude is invalid")
+    .custom((val, { req }) => {
+      if (req.params.minLat !== undefined) {
+        if (req.params.minLat > val) {
+          return false;
+        }
+      }
+      return true;
+    })
+    .withMessage("minLat must be less than or equal to maxLat"),
   check("minLng")
     .optional()
     .isDecimal({ min: -180, max: 180 })
+    .withMessage("Minimum longitude is invalid")
+    .custom((val) => {
+      if (val <= -180 || val >= 180) return false;
+      else return true;
+    })
     .withMessage("Minimum longitude is invalid"),
   check("maxLng")
     .optional()
     .isDecimal({ min: -180, max: 180 })
-    .withMessage("Maximum longitude is invalid"),
+    .withMessage("Maximum longitude is invalid")
+    .custom((val) => {
+      if (val <= -180 || val >= 180) return false;
+      else return true;
+    })
+    .withMessage("Maximum longitude is invalid")
+    .custom((val, { req }) => {
+      if (req.params.minLng !== undefined) {
+        if (req.params.minLng > val) {
+          return false;
+        }
+      }
+      return true;
+    })
+    .withMessage("minLng must be less than or equal to maxLng"),
   check("minPrice")
     .optional()
-    .isDecimal({ min: 0 })
+    .isDecimal()
+    .custom((val) => {
+      if (val < 0) return false;
+      else return true;
+    })
     .withMessage("Minimum price must be greater than or equal to 0"),
   check("maxPrice")
     .optional()
-    .isDecimal({ min: 0 })
-    .withMessage("Maximum price must be greater than or equal to 0"),
+    .isDecimal()
+    .custom((val) => {
+      if (val < 0) return false;
+      else return true;
+    })
+    .withMessage("Maximum price must be greater than or equal to 0")
+    .custom((val, { req }) => {
+      if (req.params.minPrice !== undefined) {
+        if (req.params.minPrice > val) {
+          return false;
+        }
+      }
+      return true;
+    })
+    .withMessage("Minimum price must be less than or equal to Maximum price"),
   handleValidationErrors,
 ];
 
@@ -102,8 +158,11 @@ router.get("/", validateQuery, async (req, res) => {
       },
       attributes: ["url"],
     });
-    if (previewImage)
+    if (previewImage) {
       spot.dataValues.previewImage = previewImage.dataValues.url;
+    } else {
+      spot.dataValues.previewImage = null;
+    }
 
     const reviews = await Review.findAndCountAll({
       where: {
@@ -112,7 +171,7 @@ router.get("/", validateQuery, async (req, res) => {
       attributes: ["stars"],
     });
 
-    reviewSum = reviews.rows.reduce((accum, curr) => {
+    const reviewSum = reviews.rows.reduce((accum, curr) => {
       return (accum = accum + curr.dataValues.stars);
     }, 0);
     avgRating = reviewSum / reviews.count;
@@ -143,8 +202,11 @@ router.get("/current", requireAuth, async (req, res) => {
       },
       attributes: ["url"],
     });
-    if (previewImage)
+    if (previewImage) {
       spot.dataValues.previewImage = previewImage.dataValues.url;
+    } else {
+      spot.dataValues.previewImage = null;
+    }
 
     const reviews = await Review.findAndCountAll({
       where: {
@@ -153,7 +215,7 @@ router.get("/current", requireAuth, async (req, res) => {
       attributes: ["stars"],
     });
 
-    reviewSum = reviews.rows.reduce((accum, curr) => {
+    const reviewSum = reviews.rows.reduce((accum, curr) => {
       return (accum = accum + curr.dataValues.stars);
     }, 0);
     avgRating = reviewSum / reviews.count;
@@ -204,29 +266,41 @@ router.get("/:spotId", async (req, res, next) => {
 // Create a new spot
 
 const validateSpot = [
-  check("address").isString().withMessage("Street address is required"),
-  check("city").isString().withMessage("City is required"),
-  check("state").isString().withMessage("State is required"),
-  check("country").isString().withMessage("Country is required"),
-  check("lat")
-    .not()
+  check("address")
     .isString()
+    .notEmpty()
+    .withMessage("Street address is required"),
+  check("city").isString().notEmpty().withMessage("City is required"),
+  check("state").isString().notEmpty().withMessage("State is required"),
+  check("country").isString().notEmpty().withMessage("Country is required"),
+  check("lat")
     .isDecimal()
+    .custom((val) => {
+      if (val <= -90 || val >= 90) return false;
+      else return true;
+    })
     .withMessage("Latitude is not valid"),
   check("lng")
-    .not()
-    .isString()
     .isDecimal()
+    .custom((val) => {
+      if (val <= -180 || val >= 180) return false;
+      else return true;
+    })
     .withMessage("Longitude is not valid"),
   check("name")
     .isLength({ max: 50 })
+    .withMessage("Name must be less than 50 characters")
+    .isString(),
+  check("description")
     .isString()
-    .withMessage("Name must be less than 50 characters"),
-  check("description").isString().withMessage("Description is required"),
+    .notEmpty()
+    .withMessage("Description is required"),
   check("price")
-    .not()
-    .isString()
     .isDecimal()
+    .custom((val) => {
+      if (val <= 0) return false;
+      else return true;
+    })
     .withMessage("Price per day is required"),
   handleValidationErrors,
 ];
@@ -333,7 +407,11 @@ router.get("/:spotId/reviews", async (req, res, next) => {
 // post a review for a spot
 
 const validateReview = [
-  check("review").exists().isString().withMessage("Review text is required"),
+  check("review")
+    .exists()
+    .isString()
+    .notEmpty()
+    .withMessage("Review text is required"),
   check("stars")
     .exists()
     .isInt({ gt: 0, lt: 6 })
@@ -451,7 +529,13 @@ validateBooking = [
       const startDate = new Date(req.body.startDate);
       return endDate.getTime() > startDate.getTime();
     })
-    .withMessage("endDate cannot come before startDate"),
+    .withMessage("endDate cannot come before startDate")
+    .custom((val, { req }) => {
+      const endDate = new Date(val);
+      const startDate = new Date(req.body.startDate);
+      return endDate.getTime() !== startDate.getTime();
+    })
+    .withMessage("startDate cannot be the same as endDate"),
   handleValidationErrors,
 ];
 
@@ -491,6 +575,14 @@ router.post(
       ) {
         errors.endDate = "End date conflicts with an existing booking";
       }
+      if (
+        start.getTime() <= bookingStart.getTime() &&
+        end.getTime() >= bookingEnd.getTime()
+      ) {
+        errors.startDate = "Start date conflicts with an existing booking";
+        errors.endDate = "End date conflicts with an existing booking";
+      }
+
       if (errors.startDate || errors.endDate) {
         const err = new Error(
           "Sorry, this spot is already booked for the specified dates"

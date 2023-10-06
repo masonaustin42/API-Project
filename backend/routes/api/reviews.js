@@ -54,37 +54,55 @@ router.get("/current", requireAuth, async (req, res) => {
   return res.json({ Reviews: reviews });
 });
 
-router.put("/:reviewId", async (req, res, next) => {
-  const { review, stars } = req.body;
-  const id = req.params.reviewId;
+const validateReview = [
+  check("review")
+    .exists()
+    .isString()
+    .notEmpty()
+    .withMessage("Review text is required"),
+  check("stars")
+    .exists()
+    .isInt({ gt: 0, lt: 6 })
+    .withMessage("Stars must be an integer from 1 to 5"),
+  handleValidationErrors,
+];
 
-  const checkExistingReview = await Review.findOne({
-    where: { userId: req.user.dataValues.id, id },
-  });
-  if (!checkExistingReview) {
-    const err = new Error("Review couldn't be found");
-    err.message = "Review couldn't be found";
-    err.status = 404;
-    return next(err);
-  }
+router.put(
+  "/:reviewId",
+  requireAuth,
+  validateReview,
+  async (req, res, next) => {
+    const { review, stars } = req.body;
+    const id = req.params.reviewId;
 
-  await Review.update(
-    {
-      review,
-      stars,
-    },
-    {
-      where: { id },
+    const checkExistingReview = await Review.findOne({
+      where: { userId: req.user.dataValues.id, id },
+    });
+    if (!checkExistingReview) {
+      const err = new Error("Review couldn't be found");
+      err.message = "Review couldn't be found";
+      err.status = 404;
+      return next(err);
     }
-  );
 
-  const newReview = await Review.findByPk(id);
+    await Review.update(
+      {
+        review,
+        stars,
+      },
+      {
+        where: { id },
+      }
+    );
 
-  return res.json(newReview);
-});
+    const newReview = await Review.findByPk(id);
+
+    return res.json(newReview);
+  }
+);
 
 // Delete a review
-router.delete("/:reviewId", async (req, res, next) => {
+router.delete("/:reviewId", requireAuth, async (req, res, next) => {
   const id = req.params.reviewId;
 
   const delReview = await Review.findByPk(id);
