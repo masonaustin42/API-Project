@@ -396,10 +396,14 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
   const newSpotImg = await SpotImage.create({
     url,
     preview: preview ? true : false,
-    spotId,
+    spotId: parseInt(spotId),
   });
 
-  return res.json({ url: newSpotImg.url });
+  return res.json({
+    url: newSpotImg.url,
+    id: newSpotImg.id,
+    preview: newSpotImg.preview,
+  });
 });
 
 // get all bookings from spot id
