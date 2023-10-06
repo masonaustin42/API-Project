@@ -132,10 +132,10 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
 
   const reviewImg = await ReviewImage.create({
     url,
-    reviewId,
+    reviewId: parseInt(reviewId),
   });
 
-  return res.json({ url: reviewImg.url });
+  return res.json({ url: reviewImg.url, id: reviewImg.id });
 });
 
 module.exports = router;
