@@ -44,7 +44,13 @@ validateBooking = [
       const startDate = new Date(req.body.startDate);
       return endDate.getTime() > startDate.getTime();
     })
-    .withMessage("endDate cannot come before startDate"),
+    .withMessage("endDate cannot come before startDate")
+    .custom((val, { req }) => {
+      const endDate = new Date(val);
+      const startDate = new Date(req.body.startDate);
+      return endDate.getTime() !== startDate.getTime();
+    })
+    .withMessage("startDate cannot be the same as endDate"),
   handleValidationErrors,
 ];
 
@@ -103,6 +109,14 @@ router.put(
         ) {
           errors.endDate = "End date conflicts with an existing booking";
         }
+        if (
+          start.getTime() <= bookingStart.getTime() &&
+          end.getTime() >= bookingEnd.getTime()
+        ) {
+          errors.startDate = "Start date conflicts with an existing booking";
+          errors.endDate = "End date conflicts with an existing booking";
+        }
+
         if (errors.startDate || errors.endDate) {
           const err = new Error(
             "Sorry, this spot is already booked for the specified dates"

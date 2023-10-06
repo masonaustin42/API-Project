@@ -13,6 +13,7 @@ const {
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { Op } = require("sequelize");
+const e = require("express");
 
 const router = express.Router();
 
@@ -473,7 +474,13 @@ validateBooking = [
       const startDate = new Date(req.body.startDate);
       return endDate.getTime() > startDate.getTime();
     })
-    .withMessage("endDate cannot come before startDate"),
+    .withMessage("endDate cannot come before startDate")
+    .custom((val, { req }) => {
+      const endDate = new Date(val);
+      const startDate = new Date(req.body.startDate);
+      return endDate.getTime() !== startDate.getTime();
+    })
+    .withMessage("startDate cannot be the same as endDate"),
   handleValidationErrors,
 ];
 
@@ -511,6 +518,14 @@ router.post(
         end.getTime() >= bookingStart.getTime() &&
         end.getTime() <= bookingEnd.getTime()
       ) {
+        errors.endDate = "End date conflicts with an existing booking";
+      }
+
+      if (
+        start.getTime() <= bookingStart.getTime() &&
+        end.getTime() >= bookingEnd.getTime()
+      ) {
+        errors.startDate = "Start date conflicts with an existing booking";
         errors.endDate = "End date conflicts with an existing booking";
       }
       if (errors.startDate || errors.endDate) {
