@@ -102,8 +102,11 @@ router.get("/", validateQuery, async (req, res) => {
       },
       attributes: ["url"],
     });
-    if (previewImage)
+    if (previewImage) {
       spot.dataValues.previewImage = previewImage.dataValues.url;
+    } else {
+      spot.dataValues.previewImage = null;
+    }
 
     const reviews = await Review.findAndCountAll({
       where: {
@@ -112,7 +115,7 @@ router.get("/", validateQuery, async (req, res) => {
       attributes: ["stars"],
     });
 
-    reviewSum = reviews.rows.reduce((accum, curr) => {
+    const reviewSum = reviews.rows.reduce((accum, curr) => {
       return (accum = accum + curr.dataValues.stars);
     }, 0);
     avgRating = reviewSum / reviews.count;
@@ -143,8 +146,11 @@ router.get("/current", requireAuth, async (req, res) => {
       },
       attributes: ["url"],
     });
-    if (previewImage)
+    if (previewImage) {
       spot.dataValues.previewImage = previewImage.dataValues.url;
+    } else {
+      spot.dataValues.previewImage = null;
+    }
 
     const reviews = await Review.findAndCountAll({
       where: {
@@ -153,7 +159,7 @@ router.get("/current", requireAuth, async (req, res) => {
       attributes: ["stars"],
     });
 
-    reviewSum = reviews.rows.reduce((accum, curr) => {
+    const reviewSum = reviews.rows.reduce((accum, curr) => {
       return (accum = accum + curr.dataValues.stars);
     }, 0);
     avgRating = reviewSum / reviews.count;
@@ -204,29 +210,41 @@ router.get("/:spotId", async (req, res, next) => {
 // Create a new spot
 
 const validateSpot = [
-  check("address").isString().withMessage("Street address is required"),
-  check("city").isString().withMessage("City is required"),
-  check("state").isString().withMessage("State is required"),
-  check("country").isString().withMessage("Country is required"),
-  check("lat")
-    .not()
+  check("address")
     .isString()
+    .notEmpty()
+    .withMessage("Street address is required"),
+  check("city").isString().notEmpty().withMessage("City is required"),
+  check("state").isString().notEmpty().withMessage("State is required"),
+  check("country").isString().notEmpty().withMessage("Country is required"),
+  check("lat")
     .isDecimal()
+    .custom((val) => {
+      if (val <= -90 || val >= 90) return false;
+      else return true;
+    })
     .withMessage("Latitude is not valid"),
   check("lng")
-    .not()
-    .isString()
     .isDecimal()
+    .custom((val) => {
+      if (val <= -180 || val >= 180) return false;
+      else return true;
+    })
     .withMessage("Longitude is not valid"),
   check("name")
     .isLength({ max: 50 })
+    .withMessage("Name must be less than 50 characters")
+    .isString(),
+  check("description")
     .isString()
-    .withMessage("Name must be less than 50 characters"),
-  check("description").isString().withMessage("Description is required"),
+    .notEmpty()
+    .withMessage("Description is required"),
   check("price")
-    .not()
-    .isString()
     .isDecimal()
+    .custom((val) => {
+      if (val <= 0) return false;
+      else return true;
+    })
     .withMessage("Price per day is required"),
   handleValidationErrors,
 ];
@@ -333,7 +351,11 @@ router.get("/:spotId/reviews", async (req, res, next) => {
 // post a review for a spot
 
 const validateReview = [
-  check("review").exists().isString().withMessage("Review text is required"),
+  check("review")
+    .exists()
+    .isString()
+    .notEmpty()
+    .withMessage("Review text is required"),
   check("stars")
     .exists()
     .isInt({ gt: 0, lt: 6 })
