@@ -301,7 +301,7 @@ const validateSpot = [
       if (val <= 0) return false;
       else return true;
     })
-    .withMessage("Price per day is required"),
+    .withMessage("Price per day must be greater than 0"),
   handleValidationErrors,
 ];
 
@@ -441,7 +441,7 @@ router.post(
     if (checkExistingReview) {
       const err = new Error("User already has a review for this spot");
       err.message = "User already has a review for this spot";
-      err.status = 404;
+      err.status = 403;
       return next(err);
     }
 
