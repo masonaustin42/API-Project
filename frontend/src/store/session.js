@@ -3,14 +3,14 @@ import { csrfFetch } from "./csrf";
 const LOGIN = "session/LOGIN";
 const LOGOUT = "session/LOGOUT";
 
-const logIntoState = (user) => {
+const setUser = (user) => {
   return {
     type: LOGIN,
     user,
   };
 };
 
-const logOutOfState = () => {
+const removeUser = () => {
   return {
     type: LOGOUT,
   };
@@ -32,7 +32,7 @@ export const logIn =
 
     if (res.ok) {
       const userResponse = await res.json();
-      dispatch(logIntoState(userResponse.user));
+      dispatch(setUser(userResponse.user));
       return userResponse.user;
     } else {
       return res.json();
@@ -45,9 +45,17 @@ export const logOut = () => async (dispatch) => {
   });
 
   if (res.ok) {
-    dispatch(logOutOfState());
+    dispatch(removeUser());
     return await res.json();
   }
+};
+
+export const restoreUser = () => async (dispatch) => {
+  const res = await csrfFetch("/api/session");
+
+  const data = await res.json();
+  dispatch(setUser(data.user));
+  return res;
 };
 
 const sessionReducer = (state = { user: null }, action) => {
