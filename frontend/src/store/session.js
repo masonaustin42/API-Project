@@ -57,7 +57,6 @@ export const restoreUser = () => async (dispatch) => {
 };
 
 export const signUp = (newUser) => async (dispatch) => {
-  console.log("🚀 ~ signUp ~ newUser:", newUser);
   const res = await csrfFetch("/api/users", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
