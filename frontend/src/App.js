@@ -1,9 +1,7 @@
 import { Switch, Route } from "react-router-dom";
-import LoginFormPage from "./components/LoginFormModal";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { restoreUser } from "./store/session";
-import SignupFormPage from "./components/SignupFormModal";
 import Navigation from "./components/Navigation";
 
 function App() {
