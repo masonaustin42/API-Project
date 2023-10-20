@@ -10,7 +10,7 @@ const setUser = (user) => {
   };
 };
 
-const removeUser = () => {
+const removeUserSession = () => {
   return {
     type: LOGOUT,
   };
@@ -33,10 +33,8 @@ export const logIn =
     if (res.ok) {
       const userResponse = await res.json();
       dispatch(setUser(userResponse.user));
-      return userResponse.user;
-    } else {
-      return res.json();
     }
+    return res;
   };
 
 export const logOut = () => async (dispatch) => {
@@ -45,9 +43,9 @@ export const logOut = () => async (dispatch) => {
   });
 
   if (res.ok) {
-    dispatch(removeUser());
-    return await res.json();
+    dispatch(removeUserSession());
   }
+  return res;
 };
 
 export const restoreUser = () => async (dispatch) => {
@@ -55,6 +53,21 @@ export const restoreUser = () => async (dispatch) => {
 
   const data = await res.json();
   dispatch(setUser(data.user));
+  return res;
+};
+
+export const signUp = (newUser) => async (dispatch) => {
+  console.log("🚀 ~ signUp ~ newUser:", newUser);
+  const res = await csrfFetch("/api/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(newUser),
+  });
+
+  if (res.ok) {
+    const data = await res.json();
+    dispatch(setUser(data.user));
+  }
   return res;
 };
 
