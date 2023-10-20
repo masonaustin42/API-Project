@@ -34,6 +34,8 @@ export const logIn =
       const userResponse = await res.json();
       dispatch(logIntoState(userResponse.user));
       return userResponse.user;
+    } else {
+      return res.json();
     }
   };
 
@@ -51,7 +53,6 @@ export const logOut = () => async (dispatch) => {
 const sessionReducer = (state = { user: null }, action) => {
   switch (action.type) {
     case LOGIN:
-      console.log("Hit login case!");
       return { ...state, user: action.user };
     case LOGOUT:
       return { user: null };
