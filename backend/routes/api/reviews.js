@@ -37,7 +37,6 @@ router.get("/current", requireAuth, async (req, res) => {
       },
     ],
   });
-  console.log("REVIEWS", reviews.length);
 
   for (let review of reviews) {
     const previewImage = await SpotImage.findOne({

@@ -147,7 +147,6 @@ router.get("/", validateQuery, async (req, res) => {
     },
   };
 
-  console.log(queryFilter);
   const spots = await Spot.findAll(queryFilter);
 
   for (let spot of spots) {
