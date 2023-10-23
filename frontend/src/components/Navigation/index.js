@@ -5,6 +5,7 @@ import "./Navigation.css";
 import LoginFormModal from "../LoginFormModal";
 import OpenModalButton from "../OpenModalButton";
 import SignupFormModal from "../SignupFormModal";
+import logo from "../../images/airdnd_logo.png";
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
@@ -32,15 +33,15 @@ function Navigation({ isLoaded }) {
   }
 
   return (
-    <nav>
-      <ul>
-        <li>
-          <NavLink exact to="/">
-            Home
-          </NavLink>
-        </li>
-        {isLoaded && sessionLinks}
-      </ul>
+    <nav className="navbar">
+      <div className="logo">
+        <NavLink exact to="/">
+          <img src={logo} alt="AirDnD Logo" />
+          airdnd
+        </NavLink>
+      </div>
+
+      {isLoaded && sessionLinks}
     </nav>
   );
 }
