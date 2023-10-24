@@ -31,3 +31,24 @@
 
   border: 10px solid white;
 }
+
+h1 {
+  font-size: 70px;
+}
+
+h2 {
+  font-size: 30px;
+}
+
+h1,
+h2 {
+  color: black;
+  justify-content: flex-start;
+  margin: 0 10px;
+}
+
+.spot-name {
+  margin: 0 auto;
+  width: 1400px;
+  padding: 0 40px;
+}

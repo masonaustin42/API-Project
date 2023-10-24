@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { csrfFetch } from "../../../store/csrf";
 
-function SpotReviews({ id }) {
+function SpotReviews({ id, avgRating, numReviews }) {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
@@ -17,20 +17,31 @@ function SpotReviews({ id }) {
   if (!reviews) return null;
 
   return (
-    <div>
-      {reviews.toReversed().map((review) => (
-        <div key={review.id}>
-          <h3>
-            {review.User.firstName} {review.User.lastName}
-          </h3>
-          <h4>{review.createdAt}</h4>
-          <span>
-            <i className="fa-solid fa-star"></i> {review.stars}
-          </span>
-          <p>{review.review}</p>
-        </div>
-      ))}
-    </div>
+    <>
+      <p>
+        <span>
+          <i className="fa-solid fa-star"></i>
+          {"  "}
+          {avgRating !== null ? Number(avgRating).toFixed(1) : "new"}
+          {" · "}
+          {numReviews}
+        </span>
+      </p>
+      <div className="reviews">
+        {reviews.toReversed().map((review) => (
+          <div key={review.id}>
+            <h3>
+              {review.User.firstName} {review.User.lastName}
+            </h3>
+            <h4>{review.createdAt}</h4>
+            <span>
+              <i className="fa-solid fa-star"></i> {review.stars}
+            </span>
+            <p>{review.review}</p>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 

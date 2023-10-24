@@ -33,10 +33,12 @@ function SpotDetails() {
 
   return (
     <>
-      <h1>{spot.name}</h1>
-      <h2>
-        {spot.city}, {spot.state}, {spot.country}
-      </h2>
+      <div className="spot-name">
+        <h1>{spot.name}</h1>
+        <h2>
+          {spot.city}, {spot.state}, {spot.country}
+        </h2>
+      </div>
       <div className="spot-images">
         <div className="img-preview">
           <img src={previewImg.url} alt={spot.name} />
@@ -50,24 +52,32 @@ function SpotDetails() {
           )}
         </div>
       </div>
-      <div>
+      <div className="spot-details">
         <h2>
           Hosted by {spot.Owner.firstName} {spot.Owner.lastName}
         </h2>
         <p>{spot.description}</p>
-        <div>
+        <div className="reserve-panel">
           <span>${spot.price}</span>
           <span>
-            <i className="fa-solid fa-star"></i>{" "}
+            <i className="fa-solid fa-star"></i>
+            {"  "}
             {spot.avgRating !== null
               ? Number(spot.avgRating).toFixed(1)
-              : "new"}{" "}
+              : "new"}
+            {" · "}
             {numReviews}
           </span>
-          <button>Reserve</button>
+          <button
+            onClick={() => {
+              window.alert("Feature coming soon!");
+            }}
+          >
+            Reserve
+          </button>
         </div>
       </div>
-      <SpotReviews id={id} />
+      <SpotReviews id={id} avgRating={spot.avgRating} numReviews={numReviews} />
     </>
   );
 }
