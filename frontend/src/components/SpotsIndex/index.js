@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllSpots } from "../../store/spots";
 import SpotPreview from "./SpotPreview";
+import "./SpotPreview.css";
 
 function SpotsIndex() {
   const dispatch = useDispatch();
@@ -16,6 +17,16 @@ function SpotsIndex() {
 
   return (
     <div className="spots-index">
+      {spots.map((spot) => (
+        <SpotPreview key={spot.id} id={spot.id} />
+      ))}
+
+      {spots.map((spot) => (
+        <SpotPreview key={spot.id} id={spot.id} />
+      ))}
+      {spots.map((spot) => (
+        <SpotPreview key={spot.id} id={spot.id} />
+      ))}
       {spots.map((spot) => (
         <SpotPreview key={spot.id} id={spot.id} />
       ))}

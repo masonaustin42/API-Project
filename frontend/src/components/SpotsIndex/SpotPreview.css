@@ -1,0 +1,44 @@
+.spots-index {
+  display: flex;
+  padding: 20px 80px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.spot {
+  width: 350px;
+  margin: 20px;
+}
+
+.spot:hover {
+  cursor: pointer;
+}
+
+.spot img {
+  width: 350px;
+  height: 350px;
+  border-radius: 30px;
+  object-fit: cover;
+}
+
+.spot > div {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+}
+
+.spot span {
+  margin-top: 10px;
+}
+
+.spot .location,
+.spot .rating {
+  color: black;
+}
+
+.rating {
+  justify-self: flex-end;
+}
+
+.spot .price {
+  color: gray;
+}

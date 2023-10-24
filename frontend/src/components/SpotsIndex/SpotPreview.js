@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import "./SpotPreview.css";
 
 function SpotPreview({ id }) {
   const spot = useSelector((state) => state.spots[id]);
@@ -12,16 +13,18 @@ function SpotPreview({ id }) {
   if (!spot) return null;
 
   return (
-    <div className="spot" onClick={redirect}>
+    <div className="spot" onClick={redirect} title={spot.name}>
       <img src={spot.previewImage} alt={`${spot.name} preview`} />
-      <span>
-        {spot.city}, {spot.state}
-      </span>
-      <span>
-        <i className="fa-solid fa-star"></i>{" "}
-        {spot.avgRating !== null ? Number(spot.avgRating).toFixed(1) : "new"}
-      </span>
-      <span>${spot.price} night</span>
+      <div>
+        <span className="location">
+          {spot.city}, {spot.state}
+        </span>
+        <span className="rating">
+          <i className="fa-solid fa-star"></i>{" "}
+          {spot.avgRating !== null ? Number(spot.avgRating).toFixed(1) : "new"}
+        </span>
+        <span className="price">${spot.price} night</span>
+      </div>
     </div>
   );
 }
