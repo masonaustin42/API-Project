@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { csrfFetch } from "../../store/csrf";
 import SpotReviews from "./SpotReviews";
+import "./SpotDetails.css";
 
 function SpotDetails() {
   const { id } = useParams();
@@ -28,21 +29,26 @@ function SpotDetails() {
     numReviews = null;
   }
 
+  const previewImg = spot.SpotImages.find((img) => img.preview);
+
   return (
     <>
       <h1>{spot.name}</h1>
       <h2>
         {spot.city}, {spot.state}, {spot.country}
       </h2>
-      <div>
-        {spot.SpotImages.map((img) => (
-          <img
-            key={img.url}
-            src={img.url}
-            alt={spot.name}
-            className={img.preview ? "img-main" : "img"}
-          />
-        ))}
+      <div className="spot-images">
+        <div className="img-preview">
+          <img src={previewImg.url} alt={spot.name} />
+        </div>
+        <div className="img-small">
+          {spot.SpotImages.map(
+            (img) =>
+              !img.preview && (
+                <img key={img.url} src={img.url} alt={spot.name} />
+              )
+          )}
+        </div>
       </div>
       <div>
         <h2>
