@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { logOut } from "../../store/session";
@@ -74,6 +75,7 @@ function ProfileButton() {
 
   return (
     <div className="profile-menu">
+      {user ? <NavLink to="/spots/new">Create a Spot</NavLink> : null}
       <button onClick={openMenu}>
         <i className="fa-solid fa-bars"></i>
         <i className="fa-solid fa-circle-user"></i>

@@ -29,7 +29,7 @@ function SpotDetails() {
     numReviews = null;
   }
 
-  const previewImg = spot.SpotImages.find((img) => img.preview);
+  const previewImg = spot.SpotImages.find((img) => img.preview) || {};
 
   return (
     <>
@@ -41,14 +41,12 @@ function SpotDetails() {
       </div>
       <div className="spot-images">
         <div className="img-preview">
-          <img src={previewImg.url} alt={spot.name} />
+          <img src={previewImg.url ? previewImg.url : null} alt={spot.name} />
         </div>
         <div className="img-small">
           {spot.SpotImages.map(
             (img) =>
-              !img.preview && (
-                <img key={img.url} src={img.url} alt={spot.name} />
-              )
+              !img.preview && <img key={img.id} src={img.url} alt={spot.name} />
           )}
         </div>
       </div>
