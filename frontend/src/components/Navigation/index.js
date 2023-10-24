@@ -1,46 +1,18 @@
 import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
 import ProfileButton from "./ProfileButton";
 import "./Navigation.css";
-import LoginFormModal from "../LoginFormModal";
-import OpenModalButton from "../OpenModalButton";
-import SignupFormModal from "../SignupFormModal";
+import logo from "../../images/airdnd_logo_full.png";
 
 function Navigation({ isLoaded }) {
-  const sessionUser = useSelector((state) => state.session.user);
-
-  let sessionLinks;
-  if (sessionUser) {
-    sessionLinks = (
-      <li>
-        <ProfileButton user={sessionUser} />
-      </li>
-    );
-  } else {
-    sessionLinks = (
-      <li>
-        <OpenModalButton
-          buttonText="Log In"
-          modalComponent={<LoginFormModal />}
-        />
-        <OpenModalButton
-          buttonText="Sign Up"
-          modalComponent={<SignupFormModal />}
-        />
-      </li>
-    );
-  }
-
   return (
-    <nav>
-      <ul>
-        <li>
-          <NavLink exact to="/">
-            Home
-          </NavLink>
-        </li>
-        {isLoaded && sessionLinks}
-      </ul>
+    <nav className="navbar">
+      <div className="logo">
+        <NavLink exact to="/">
+          <img src={logo} alt="AirDnD Logo" />
+        </NavLink>
+      </div>
+
+      {isLoaded && <ProfileButton />}
     </nav>
   );
 }

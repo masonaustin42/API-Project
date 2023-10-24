@@ -1,9 +1,16 @@
 import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { logOut } from "../../store/session";
 
-function ProfileButton({ user }) {
+import LoginFormModal from "../LoginFormModal";
+import OpenModalButton from "../OpenModalButton";
+import SignupFormModal from "../SignupFormModal";
+
+function ProfileButton() {
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.session.user);
 
   const [dropdown, setDropdown] = useState(false);
   const dropdownRef = useRef();
@@ -31,13 +38,11 @@ function ProfileButton({ user }) {
     return () => document.removeEventListener("click", closeMenu);
   }, [dropdown]);
 
-  return (
-    <>
-      <button onClick={openMenu}>
-        <i className="fa-solid fa-user"></i>
-      </button>
+  let sessionLinks;
 
-      <ul className={dropdownClass} ref={dropdownRef}>
+  if (user) {
+    sessionLinks = (
+      <>
         <li>{user.username}</li>
         <li>
           {user.firstName} {user.lastName}
@@ -46,8 +51,38 @@ function ProfileButton({ user }) {
         <li>
           <button onClick={logout}>Log Out</button>
         </li>
+      </>
+    );
+  } else {
+    sessionLinks = (
+      <>
+        <li>
+          <OpenModalButton
+            buttonText="Log In"
+            modalComponent={<LoginFormModal />}
+          />
+        </li>
+        <li>
+          <OpenModalButton
+            buttonText="Sign Up"
+            modalComponent={<SignupFormModal />}
+          />
+        </li>
+      </>
+    );
+  }
+
+  return (
+    <div className="profile-menu">
+      <button onClick={openMenu}>
+        <i class="fa-solid fa-bars"></i>
+        <i class="fa-solid fa-circle-user"></i>
+      </button>
+
+      <ul className={dropdownClass} ref={dropdownRef}>
+        {sessionLinks}
       </ul>
-    </>
+    </div>
   );
 }
 
