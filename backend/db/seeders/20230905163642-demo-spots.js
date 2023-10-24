@@ -1,6 +1,7 @@
 "use strict";
 
 const { Spot } = require("../models");
+const { faker } = require("@faker-js/faker");
 
 let options = {};
 if (process.env.NODE_ENV === "production") {
@@ -20,9 +21,8 @@ module.exports = {
           country: "USA",
           lat: 47.534333729183,
           lng: -122.59627595866229,
-          name: "McDonald's",
-          description:
-            "This is a McDonald's restaurant. Come spend a night or two!",
+          name: "Swamp House",
+          description: faker.lorem.lines(5),
           price: 123.45,
         },
         {
@@ -33,9 +33,8 @@ module.exports = {
           country: "USA",
           lat: 47.242572756428935,
           lng: -122.5250235429405,
-          name: "Chick-fil-A",
-          description:
-            "This is a Chick-fil-A restaurant. The cows make great company!",
+          name: "Wizard Tower",
+          description: faker.lorem.lines(5),
           price: 234.56,
         },
         {
@@ -46,9 +45,8 @@ module.exports = {
           country: "USA",
           lat: 47.53356833150984,
           lng: -122.60760423504283,
-          name: "Taco Bell",
-          description:
-            "This is a Taco Bell restaurant. Authentic Mexican cuisine!",
+          name: "Vlad's Castle",
+          description: faker.lorem.lines(5),
           price: 100.0,
         },
         {
@@ -59,9 +57,8 @@ module.exports = {
           country: "USA",
           lat: 47.51685571815222,
           lng: -122.63062494928074,
-          name: "Wendy's",
-          description:
-            "This is a Wendy's restaurant. Come spend get a Four for Four!",
+          name: "Bag End",
+          description: faker.lorem.lines(5),
           price: 444.44,
         },
       ],
@@ -76,7 +73,7 @@ module.exports = {
       options,
       {
         name: {
-          [Op.in]: ["McDonald's", "Chick-fil-A", "Taco Bell", "Wendy's"],
+          [Op.in]: ["Swamp House", "Wizard Tower", "Vlad's Castle", "Bag End"],
         },
       },
       {}
