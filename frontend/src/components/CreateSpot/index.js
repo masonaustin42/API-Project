@@ -2,7 +2,7 @@ import { csrfFetch } from "../../store/csrf";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createSpot } from "../../store/spots";
+import { createSpot, updateSpot } from "../../store/spots";
 import { useModal } from "../../context/Modal";
 import LoginFormModal from "../LoginFormModal";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
@@ -33,17 +33,6 @@ function CreateSpot() {
       setDescription(currentSpot.description);
       setName(currentSpot.name);
       setPrice(currentSpot.price);
-
-      const images = currentSpot.SpotImages;
-
-      const preview = images.find((img) => img.preview);
-      setPreviewImg(preview.url);
-      images.splice(images.indexOf(preview), 1);
-
-      if (images.length) setImg1(images.shift().url);
-      if (images.length) setImg2(images.shift().url);
-      if (images.length) setImg3(images.shift().url);
-      if (images.length) setImg4(images.shift().url);
 
       if (currentSpot.ownerId !== user?.id) {
         setModalContent(<LoginFormModal />);
@@ -109,7 +98,8 @@ function CreateSpot() {
             "Image URL must end with .png, .jpeg, or .jpg";
         }
       }
-      if (previewImg === "") errs.previewImg = "Preview image is required.";
+      if (previewImg === "" && !id)
+        errs.previewImg = "Preview image is required.";
 
       //   validate description
       if (description.length < 30)
@@ -136,32 +126,60 @@ function CreateSpot() {
       }
 
       // set all errors
-      if (Object.values(errs).length) return setErrors(errs);
+      if (Object.values(errs).length) {
+        console.log(errs);
+        return setErrors(errs);
+      }
+      let newSpot;
 
-      const newSpot = await dispatch(
-        createSpot({
-          country,
-          address,
-          city,
-          state,
-          lat,
-          lng,
-          description,
-          name,
-          price,
-          ownerId: user.id,
-        })
-      ).catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) setErrors(data.errors);
-      });
+      if (id) {
+        newSpot = await dispatch(
+          updateSpot(
+            {
+              country,
+              address,
+              city,
+              state,
+              lat,
+              lng,
+              description,
+              name,
+              price,
+              ownerId: user.id,
+            },
+            currentSpot.id
+          )
+        ).catch(async (res) => {
+          const data = await res.json();
+          if (data && data.errors) setErrors(data.errors);
+        });
+      } else {
+        newSpot = await dispatch(
+          createSpot({
+            country,
+            address,
+            city,
+            state,
+            lat,
+            lng,
+            description,
+            name,
+            price,
+            ownerId: user.id,
+          })
+        ).catch(async (res) => {
+          const data = await res.json();
+          if (data && data.errors) setErrors(data.errors);
+        });
+      }
 
-      if (newSpot) {
+      if (newSpot && !id) {
         createImage(previewImg, newSpot.id, true);
         createImage(img1, newSpot.id);
         createImage(img2, newSpot.id);
         createImage(img3, newSpot.id);
         createImage(img4, newSpot.id);
+      } else if (newSpot) {
         history.push(`/spots/${newSpot.id}`);
       }
     } else {
@@ -275,45 +293,51 @@ function CreateSpot() {
           onChange={(e) => setPrice(e.target.value)}
         />
         {errors.price && <span className="err">{errors.price}</span>}
-        <hr />
-        <h2>Liven up your spot with photos</h2>
-        <h3>Submit a link to at least one photo to publish your spot.</h3>
-        <input
-          type="url"
-          placeholder="Preview Image URL"
-          value={previewImg}
-          onChange={(e) => setPreviewImg(e.target.value)}
-        />
-        {errors.previewImg && <span className="err">{errors.previewImg}</span>}
-        <input
-          type="url"
-          placeholder="Image URL"
-          value={img1}
-          onChange={(e) => setImg1(e.target.value)}
-        />
-        {errors.img1 && <span className="err">{errors.img1}</span>}
-        <input
-          type="url"
-          placeholder="Image URL"
-          value={img2}
-          onChange={(e) => setImg2(e.target.value)}
-        />
-        {errors.img2 && <span className="err">{errors.img2}</span>}
-        <input
-          type="url"
-          placeholder="Image URL"
-          value={img3}
-          onChange={(e) => setImg3(e.target.value)}
-        />
-        {errors.img3 && <span className="err">{errors.img3}</span>}
-        <input
-          type="url"
-          placeholder="Image URL"
-          value={img4}
-          onChange={(e) => setImg4(e.target.value)}
-        />
-        {errors.img4 && <span className="err">{errors.img4}</span>}
-        <button>Create Spot</button>
+        {!id && (
+          <>
+            <hr />
+            <h2>Liven up your spot with photos</h2>
+            <h3>Submit a link to at least one photo to publish your spot.</h3>
+            <input
+              type="url"
+              placeholder="Preview Image URL"
+              value={previewImg}
+              onChange={(e) => setPreviewImg(e.target.value)}
+            />
+            {errors.previewImg && (
+              <span className="err">{errors.previewImg}</span>
+            )}
+            <input
+              type="url"
+              placeholder="Image URL"
+              value={img1}
+              onChange={(e) => setImg1(e.target.value)}
+            />
+            {errors.img1 && <span className="err">{errors.img1}</span>}
+            <input
+              type="url"
+              placeholder="Image URL"
+              value={img2}
+              onChange={(e) => setImg2(e.target.value)}
+            />
+            {errors.img2 && <span className="err">{errors.img2}</span>}
+            <input
+              type="url"
+              placeholder="Image URL"
+              value={img3}
+              onChange={(e) => setImg3(e.target.value)}
+            />
+            {errors.img3 && <span className="err">{errors.img3}</span>}
+            <input
+              type="url"
+              placeholder="Image URL"
+              value={img4}
+              onChange={(e) => setImg4(e.target.value)}
+            />
+            {errors.img4 && <span className="err">{errors.img4}</span>}
+          </>
+        )}
+        <button>{id ? "Update Spot" : "Create Spot"}</button>
       </form>
     </>
   );
