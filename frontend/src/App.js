@@ -7,6 +7,7 @@ import SpotsIndex from "./components/SpotsIndex";
 import SpotDetails from "./components/SpotDetails";
 import CreateSpot from "./components/CreateSpot";
 import ManageSpots from "./components/ManageSpots";
+import ReviewFormModal from "./components/ReviewFormModal";
 
 function App() {
   const dispatch = useDispatch();
@@ -36,6 +37,9 @@ function App() {
           </Route>
           <Route exact path="/spots/:id/update">
             <CreateSpot />
+          </Route>
+          <Route path="/test">
+            <ReviewFormModal />
           </Route>
         </Switch>
       )}
