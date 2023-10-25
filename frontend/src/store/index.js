@@ -8,14 +8,12 @@ import thunk from "redux-thunk";
 import sessionReducer from "./session";
 import spotsReducer from "./spots";
 import reviewsReducer from "./reviews";
-import currentSpotsReducer from "./currentUserSpots.js";
 import currentSpotReducer from "./currentSpot.js";
 
 const rootReducer = combineReducers({
   session: sessionReducer,
   spots: spotsReducer,
   reviews: reviewsReducer,
-  currentSpots: currentSpotsReducer,
   currentSpot: currentSpotReducer,
 });
 

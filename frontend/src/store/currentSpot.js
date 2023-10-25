@@ -1,7 +1,7 @@
 import { csrfFetch } from "./csrf";
 
-const GET_SPOT = "currentSpot/GET_SPOT";
-const RESET_SPOT = "currentSpot/CREATE_SPOT";
+const GET_SPOT = "currentSpot/GET_CURRENT_SPOT";
+const RESET_SPOT = "currentSpot/RESET_CURRENT_SPOT";
 
 const getSpot = (spot) => {
   return {
