@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllSpots } from "../../store/spots";
 import SpotPreview from "./SpotPreview";
 import "./SpotPreview.css";
+import { resetSpot } from "../../store/currentSpot";
 
 function SpotsIndex() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllSpots());
+    dispatch(resetSpot());
   }, [dispatch]);
 
   const spots = Object.values(useSelector((state) => state.spots));

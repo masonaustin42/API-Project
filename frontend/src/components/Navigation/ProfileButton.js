@@ -3,14 +3,14 @@ import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { logOut } from "../../store/session";
-
 import LoginFormModal from "../LoginFormModal";
 import OpenModalButton from "../OpenModalButton";
 import SignupFormModal from "../SignupFormModal";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function ProfileButton() {
   const dispatch = useDispatch();
-
+  const history = useHistory();
   const user = useSelector((state) => state.session.user);
 
   const [dropdown, setDropdown] = useState(false);
@@ -20,6 +20,8 @@ function ProfileButton() {
   const logout = (e) => {
     e.preventDefault();
     dispatch(logOut());
+    setDropdown(false);
+    history.push("/");
   };
 
   const openMenu = () => {
@@ -44,11 +46,13 @@ function ProfileButton() {
   if (user) {
     sessionLinks = (
       <>
-        <li>{user.username}</li>
-        <li>
-          {user.firstName} {user.lastName}
-        </li>
+        <li>Hello, {user.firstName}</li>
         <li>{user.email}</li>
+        <li>
+          <NavLink to="/spots/current" onClick={() => setDropdown(false)}>
+            Manage Spots
+          </NavLink>
+        </li>
         <li>
           <button onClick={logout}>Log Out</button>
         </li>
@@ -61,12 +65,14 @@ function ProfileButton() {
           <OpenModalButton
             buttonText="Log In"
             modalComponent={<LoginFormModal />}
+            onButtonClick={() => setDropdown(false)}
           />
         </li>
         <li>
           <OpenModalButton
             buttonText="Sign Up"
             modalComponent={<SignupFormModal />}
+            onButtonClick={() => setDropdown(false)}
           />
         </li>
       </>

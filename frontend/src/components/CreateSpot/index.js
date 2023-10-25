@@ -1,16 +1,52 @@
 import { csrfFetch } from "../../store/csrf";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createSpot } from "../../store/spots";
 import { useModal } from "../../context/Modal";
 import LoginFormModal from "../LoginFormModal";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { getSpotDetails } from "../../store/currentSpot";
 
 function CreateSpot() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.session.user);
   const history = useHistory();
   const { setModalContent } = useModal();
+  const user = useSelector((state) => state.session.user);
+  const currentSpot = useSelector((state) => state.currentSpot);
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      dispatch(getSpotDetails(id));
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (Object.values(currentSpot).length) {
+      setCountry(currentSpot.country);
+      setAddress(currentSpot.address);
+      setCity(currentSpot.city);
+      setState(currentSpot.state);
+      setLat(currentSpot.lat);
+      setLng(currentSpot.lng);
+      setDescription(currentSpot.description);
+      setName(currentSpot.name);
+      setPrice(currentSpot.price);
+
+      const images = currentSpot.SpotImages;
+
+      const preview = images.find((img) => img.preview);
+      setPreviewImg(preview.url);
+      images.splice(images.indexOf(preview), 1);
+
+      if (images.length) setImg1(images.shift().url);
+      if (images.length) setImg2(images.shift().url);
+      if (images.length) setImg3(images.shift().url);
+      if (images.length) setImg4(images.shift().url);
+    }
+  }, [currentSpot]);
+
   const [country, setCountry] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");

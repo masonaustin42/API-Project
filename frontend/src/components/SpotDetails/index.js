@@ -1,24 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { csrfFetch } from "../../store/csrf";
 import SpotReviews from "./SpotReviews";
 import "./SpotDetails.css";
+import { useDispatch, useSelector } from "react-redux";
+import { getSpotDetails } from "../../store/currentSpot";
 
 function SpotDetails() {
   const { id } = useParams();
-  const [spot, setSpot] = useState(null);
+  const dispatch = useDispatch();
+  const spot = useSelector((state) => state.currentSpot);
 
   useEffect(() => {
-    (async () => {
-      const spotDetails = await csrfFetch(`/api/spots/${id}`);
-      if (spotDetails.ok) {
-        const data = await spotDetails.json();
-        setSpot({ ...data });
-      }
-    })();
-  }, [id]);
+    dispatch(getSpotDetails(id));
+  }, [dispatch]);
 
-  if (!spot) return null;
+  if (!Object.values(spot).length) return null;
 
   let numReviews;
   if (spot.numReviews === 1) {
@@ -29,7 +25,8 @@ function SpotDetails() {
     numReviews = null;
   }
 
-  const previewImg = spot.SpotImages.find((img) => img.preview) || {};
+  let previewImg = {};
+  if (spot.SpotImages) previewImg = spot.SpotImages.find((img) => img.preview);
 
   return (
     <>

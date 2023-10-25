@@ -27,6 +27,7 @@ function LoginFormModal() {
       <h2>Log In</h2>
       <div className="form-container">
         <form onSubmit={onSubmit}>
+          {errors.credential && <p className="err">{errors.credential}</p>}
           <label>
             Username or Email:
             <input
@@ -36,7 +37,6 @@ function LoginFormModal() {
               required
             />
           </label>
-          {errors.credential && <p className="err">{errors.credential}</p>}
           <label>
             Password:
             <input
@@ -46,7 +46,6 @@ function LoginFormModal() {
               required
             />
           </label>
-          {errors.password && <p className="err">{errors.password}</p>}
           <button>Log In</button>
         </form>
       </div>
