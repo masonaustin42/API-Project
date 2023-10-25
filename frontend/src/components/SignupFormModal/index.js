@@ -59,7 +59,7 @@ function SignupFormModal() {
               required
             />
           </label>
-          {errors.username && <p>{errors.username}</p>}
+          {errors.username && <p className="err">{errors.username}</p>}
           <label>
             First Name:
             <input
@@ -69,7 +69,7 @@ function SignupFormModal() {
               required
             />
           </label>
-          {errors.firstName && <p>{errors.firstName}</p>}
+          {errors.firstName && <p className="err">{errors.firstName}</p>}
           <label>
             Last Name:
             <input
@@ -79,7 +79,7 @@ function SignupFormModal() {
               required
             />
           </label>
-          {errors.lastName && <p>{errors.lastName}</p>}
+          {errors.lastName && <p className="err">{errors.lastName}</p>}
           <label>
             Email:
             <input
@@ -89,7 +89,7 @@ function SignupFormModal() {
               required
             />
           </label>
-          {errors.email && <p>{errors.email}</p>}
+          {errors.email && <p className="err">{errors.email}</p>}
           <label>
             Password:
             <input
@@ -99,7 +99,7 @@ function SignupFormModal() {
               required
             />
           </label>
-          {errors.password && <p>{errors.password}</p>}
+          {errors.password && <p className="err">{errors.password}</p>}
           <label>
             Confirm Password:
             <input
@@ -109,7 +109,9 @@ function SignupFormModal() {
               required
             />
           </label>
-          {errors.passwordConfirm && <p>{errors.passwordConfirm}</p>}
+          {errors.passwordConfirm && (
+            <p className="err">{errors.passwordConfirm}</p>
+          )}
           <button>Create Account</button>
         </form>
       </div>

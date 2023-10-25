@@ -41,6 +41,6 @@ button {
   flex-direction: row;
 }
 
-p {
+.err {
   color: red;
 }

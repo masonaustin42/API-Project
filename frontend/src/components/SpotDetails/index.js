@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { csrfFetch } from "../../store/csrf";
 import SpotReviews from "./SpotReviews";
+import "./SpotDetails.css";
 
 function SpotDetails() {
   const { id } = useParams();
@@ -28,40 +29,53 @@ function SpotDetails() {
     numReviews = null;
   }
 
+  const previewImg = spot.SpotImages.find((img) => img.preview) || {};
+
   return (
     <>
-      <h1>{spot.name}</h1>
-      <h2>
-        {spot.city}, {spot.state}, {spot.country}
-      </h2>
-      <div>
-        {spot.SpotImages.map((img) => (
-          <img
-            key={img.url}
-            src={img.url}
-            alt={spot.name}
-            className={img.preview ? "img-main" : "img"}
-          />
-        ))}
+      <div className="spot-name">
+        <h1>{spot.name}</h1>
+        <h2>
+          {spot.city}, {spot.state}, {spot.country}
+        </h2>
       </div>
-      <div>
+      <div className="spot-images">
+        <div className="img-preview">
+          <img src={previewImg.url ? previewImg.url : null} alt={spot.name} />
+        </div>
+        <div className="img-small">
+          {spot.SpotImages.map(
+            (img) =>
+              !img.preview && <img key={img.id} src={img.url} alt={spot.name} />
+          )}
+        </div>
+      </div>
+      <div className="spot-details">
         <h2>
           Hosted by {spot.Owner.firstName} {spot.Owner.lastName}
         </h2>
         <p>{spot.description}</p>
-        <div>
+        <div className="reserve-panel">
           <span>${spot.price}</span>
           <span>
-            <i className="fa-solid fa-star"></i>{" "}
+            <i className="fa-solid fa-star"></i>
+            {"  "}
             {spot.avgRating !== null
-              ? Number(spot.avgRating).toFixed(1)
-              : "new"}{" "}
+              ? " · " + Number(spot.avgRating).toFixed(1)
+              : "new"}
+            {}
             {numReviews}
           </span>
-          <button>Reserve</button>
+          <button
+            onClick={() => {
+              window.alert("Feature coming soon!");
+            }}
+          >
+            Reserve
+          </button>
         </div>
       </div>
-      <SpotReviews id={id} />
+      <SpotReviews id={id} avgRating={spot.avgRating} numReviews={numReviews} />
     </>
   );
 }
