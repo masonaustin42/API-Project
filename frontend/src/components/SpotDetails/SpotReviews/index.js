@@ -22,8 +22,7 @@ function SpotReviews({ id, avgRating, numReviews }) {
         <span>
           <i className="fa-solid fa-star"></i>
           {"  "}
-          {avgRating !== null ? Number(avgRating).toFixed(1) : "new"}
-          {" · "}
+          {avgRating !== null ? " · " + Number(avgRating).toFixed(1) : "new"}
           {numReviews}
         </span>
       </p>

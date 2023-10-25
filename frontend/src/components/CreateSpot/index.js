@@ -50,6 +50,7 @@ function CreateSpot() {
         return setErrors({ previewImg: "Preview image is required." });
       }
 
+      //   validate images
       const images = [previewImg, img1, img2, img3, img4];
       const imagesString = ["previewImg", "img1", "img2", "img3", "img4"];
       const imgErrors = {};
@@ -67,10 +68,13 @@ function CreateSpot() {
             "Image URL must end with .png, .jpeg, or .jpg";
         }
       }
-
-      console.log("img errs:", imgErrors);
-
       if (Object.keys(imgErrors).length) return setErrors(imgErrors);
+
+      //   validate description
+      if (description.length < 30)
+        return setErrors({
+          description: "Description should be at least 30 characters",
+        });
 
       const newSpot = await dispatch(
         createSpot({

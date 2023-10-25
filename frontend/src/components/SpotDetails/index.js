@@ -61,9 +61,9 @@ function SpotDetails() {
             <i className="fa-solid fa-star"></i>
             {"  "}
             {spot.avgRating !== null
-              ? Number(spot.avgRating).toFixed(1)
+              ? " · " + Number(spot.avgRating).toFixed(1)
               : "new"}
-            {" · "}
+            {}
             {numReviews}
           </span>
           <button
