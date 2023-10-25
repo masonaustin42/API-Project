@@ -46,14 +46,11 @@ function CreateSpot() {
 
     if (user) {
       // if logged in user
-      if (previewImg === "") {
-        return setErrors({ previewImg: "Preview image is required." });
-      }
+      const errs = {};
 
       //   validate images
       const images = [previewImg, img1, img2, img3, img4];
       const imagesString = ["previewImg", "img1", "img2", "img3", "img4"];
-      const imgErrors = {};
       for (let i = 0; i < images.length; i++) {
         let image = images[i];
         if (
@@ -64,17 +61,38 @@ function CreateSpot() {
             image.endsWith(".jpg")
           )
         ) {
-          imgErrors[imagesString[i]] =
+          errs[imagesString[i]] =
             "Image URL must end with .png, .jpeg, or .jpg";
         }
       }
-      if (Object.keys(imgErrors).length) return setErrors(imgErrors);
+      if (previewImg === "") errs.previewImg = "Preview image is required.";
 
       //   validate description
       if (description.length < 30)
-        return setErrors({
-          description: "Description should be at least 30 characters",
-        });
+        errs.description = "Description should be at least 30 characters";
+      // validate price
+      if (price <= 0) errs.price = "Price per night must be greater than 0";
+      // validate latitude/longitude
+      if (lat < -90 || lat > 90) errs.lat = "Invalid latitude";
+      if (lng < -180 || lng > 180) errs.lng = "Invalid longitude";
+      // validate other inputs
+      const inputs = [address, country, city, state, name];
+      const inputsString = ["address", "country", "city", "state", "name"];
+      const inputsStringUppercase = [
+        "Address",
+        "Country",
+        "City",
+        "State",
+        "Name",
+      ];
+      for (let i = 0; i < inputs.length; i++) {
+        let input = inputs[i];
+        if (input === "")
+          errs[inputsString[i]] = `${inputsStringUppercase[i]} is required`;
+      }
+
+      // set all errors
+      if (Object.values(errs).length) return setErrors(errs);
 
       const newSpot = await dispatch(
         createSpot({
