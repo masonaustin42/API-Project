@@ -44,6 +44,10 @@ function CreateSpot() {
       if (images.length) setImg2(images.shift().url);
       if (images.length) setImg3(images.shift().url);
       if (images.length) setImg4(images.shift().url);
+
+      if (currentSpot.ownerId !== user?.id) {
+        setModalContent(<LoginFormModal />);
+      }
     }
   }, [currentSpot]);
 
@@ -82,6 +86,10 @@ function CreateSpot() {
 
     if (user) {
       // if logged in user
+
+      if (id && currentSpot.ownerId !== user?.id) {
+        return setModalContent(<LoginFormModal />);
+      }
       const errs = {};
 
       //   validate images

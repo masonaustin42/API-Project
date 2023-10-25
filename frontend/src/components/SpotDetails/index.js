@@ -38,7 +38,7 @@ function SpotDetails() {
       </div>
       <div className="spot-images">
         <div className="img-preview">
-          <img src={previewImg.url ? previewImg.url : null} alt={spot.name} />
+          <img src={previewImg?.url ? previewImg.url : null} alt={spot.name} />
         </div>
         <div className="img-small">
           {spot.SpotImages.map(
