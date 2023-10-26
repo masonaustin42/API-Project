@@ -38,9 +38,6 @@ function App() {
           <Route exact path="/spots/:id/update">
             <CreateSpot />
           </Route>
-          <Route path="/test">
-            <ReviewFormModal />
-          </Route>
         </Switch>
       )}
     </>

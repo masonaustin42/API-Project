@@ -127,7 +127,6 @@ function CreateSpot() {
 
       // set all errors
       if (Object.values(errs).length) {
-        console.log(errs);
         return setErrors(errs);
       }
       let newSpot;
@@ -179,6 +178,7 @@ function CreateSpot() {
         createImage(img2, newSpot.id);
         createImage(img3, newSpot.id);
         createImage(img4, newSpot.id);
+        history.push(`/spots/${newSpot.id}`);
       } else if (newSpot) {
         history.push(`/spots/${newSpot.id}`);
       }

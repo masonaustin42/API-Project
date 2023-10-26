@@ -72,7 +72,13 @@ function SpotDetails() {
           </button>
         </div>
       </div>
-      <SpotReviews id={id} avgRating={spot.avgRating} numReviews={numReviews} />
+      <SpotReviews
+        id={id}
+        avgRating={spot.avgRating}
+        numReviews={numReviews}
+        ownerId={spot.ownerId}
+        spotId={spot.id}
+      />
     </>
   );
 }

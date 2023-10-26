@@ -8,7 +8,6 @@ import OpenModalButton from "../OpenModalButton/index.js";
 import ConfirmDeleteModal from "../ConfirmDeleteModal/index.js";
 
 function ManageSpots() {
-  console.log("Top of Manage Spots");
   const dispatch = useDispatch();
   const history = useHistory();
   const userSpots = Object.values(useSelector((state) => state.spots));

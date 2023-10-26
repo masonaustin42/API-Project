@@ -80,10 +80,6 @@ export const deleteSpot = (id) => async (dispatch) => {
   const res = await csrfFetch(`/api/spots/${id}`, {
     method: "DELETE",
   });
-
-  if (res.ok) {
-    dispatch(getAllSpots);
-  }
   return res;
 };
 
