@@ -10,6 +10,7 @@ function SpotReviews({ id, avgRating, numReviews, ownerId, spotId }) {
   const reviews = Object.values(useSelector((state) => state.reviews));
   const user = useSelector((state) => state.session.user);
   const [reviewButton, setReviewButton] = useState(false);
+  const [isNoReviews, setIsNoReviews] = useState(false);
 
   useEffect(() => {
     dispatch(getSpotReviews(id));
@@ -25,6 +26,12 @@ function SpotReviews({ id, avgRating, numReviews, ownerId, spotId }) {
     } else {
       setReviewButton(false);
     }
+
+    if (!reviews.length && user?.id !== ownerId) {
+      setIsNoReviews(true);
+    } else {
+      setIsNoReviews(false);
+    }
   }, [reviews]);
 
   return (
@@ -33,7 +40,7 @@ function SpotReviews({ id, avgRating, numReviews, ownerId, spotId }) {
         <span>
           <i className="fa-solid fa-star"></i>
           {"  "}
-          {avgRating !== null ? " · " + Number(avgRating).toFixed(1) : "new"}
+          {avgRating !== null ? Number(avgRating).toFixed(1) : "new"}
           {numReviews}
         </span>
       </p>
@@ -44,7 +51,7 @@ function SpotReviews({ id, avgRating, numReviews, ownerId, spotId }) {
         />
       )}
       <div className="reviews">
-        {!reviews.length && <p>Be the first to post a review!</p>}
+        {isNoReviews && <p>Be the first to post a review!</p>}
         {reviews.toReversed().map((review) => {
           return (
             <div key={review.id}>

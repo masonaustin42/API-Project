@@ -18,9 +18,9 @@ function SpotDetails() {
 
   let numReviews;
   if (spot.numReviews === 1) {
-    numReviews = "1 review";
+    numReviews = " · 1 review";
   } else if (spot.numReviews > 1) {
-    numReviews = `${spot.numReviews} reviews`;
+    numReviews = ` · ${spot.numReviews} reviews`;
   } else {
     numReviews = null;
   }

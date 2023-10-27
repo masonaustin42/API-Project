@@ -2,7 +2,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCurrentSpots, resetSpots } from "../../store/spots.js";
 import SpotPreview from "../SpotsIndex/SpotPreview.js";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min.js";
+import {
+  NavLink,
+  useHistory,
+} from "react-router-dom/cjs/react-router-dom.min.js";
 import { resetSpot } from "../../store/currentSpot";
 import OpenModalButton from "../OpenModalButton/index.js";
 import ConfirmDeleteModal from "../ConfirmDeleteModal/index.js";
@@ -40,6 +43,7 @@ function ManageSpots() {
             />
           </div>
         ))}
+        {!userSpots.length && <NavLink to="/spots/new">Create a Spot</NavLink>}
       </div>
     </>
   );

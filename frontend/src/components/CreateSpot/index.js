@@ -23,7 +23,7 @@ function CreateSpot() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (Object.values(currentSpot).length) {
+    if (Object.values(currentSpot).length && id) {
       setCountry(currentSpot.country);
       setAddress(currentSpot.address);
       setCity(currentSpot.city);
@@ -48,7 +48,7 @@ function CreateSpot() {
   const [lng, setLng] = useState(0);
   const [description, setDescription] = useState("");
   const [name, setName] = useState("");
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState("");
   const [previewImg, setPreviewImg] = useState("");
   const [img1, setImg1] = useState("");
   const [img2, setImg2] = useState("");
@@ -189,7 +189,7 @@ function CreateSpot() {
   };
   return (
     <>
-      <h1>Create a new Spot</h1>
+      <h1>{id ? "Update your Spot" : "Create a new Spot"}</h1>
       <form onSubmit={onSubmit}>
         <h2>Where's your place located?</h2>
         <h3>

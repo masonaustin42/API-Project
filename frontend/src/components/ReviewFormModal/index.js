@@ -74,7 +74,6 @@ function ReviewFormModal() {
               setDescription(e.target.value);
             }}
           />
-          {stars}
           <div
             className="star-container"
             onMouseLeave={() => {
