@@ -31,7 +31,7 @@ ul {
   width: 200px;
   height: 100px;
   right: 80px;
-  margin-top: 10px;
+  margin-top: 180px;
   padding: 15px;
 }
 
@@ -59,6 +59,20 @@ ul {
 
 .logo img {
   height: 48px;
+}
+
+.profile-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#manage-spots {
+  margin-top: 10px;
+}
+
+.profile-menu > a {
+  margin-right: 20px;
 }
 
 .profile-menu > button {

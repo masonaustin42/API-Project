@@ -7,6 +7,7 @@ import { useModal } from "../../context/Modal";
 import LoginFormModal from "../LoginFormModal";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { getSpotDetails } from "../../store/currentSpot";
+import "./CreateSpot.css";
 
 function CreateSpot() {
   const dispatch = useDispatch();
@@ -188,7 +189,7 @@ function CreateSpot() {
     }
   };
   return (
-    <>
+    <div id="create-spot">
       <h1>{id ? "Update your Spot" : "Create a new Spot"}</h1>
       <form onSubmit={onSubmit}>
         <h2>Where's your place located?</h2>
@@ -196,7 +197,7 @@ function CreateSpot() {
           Guests will only get your exact address once they booked a
           reservation.
         </h3>
-        <label>
+        <label className="location-input">
           Country{" "}
           {errors.country && <span className="err">{errors.country}</span>}
           <input
@@ -206,7 +207,7 @@ function CreateSpot() {
             onChange={(e) => setCountry(e.target.value)}
           />
         </label>
-        <label>
+        <label className="location-input">
           Street Address{" "}
           {errors.address && <span className="err">{errors.address}</span>}
           <input
@@ -216,42 +217,46 @@ function CreateSpot() {
             onChange={(e) => setAddress(e.target.value)}
           />
         </label>
-        <label>
-          City {errors.city && <span className="err">{errors.city}</span>}
-          <input
-            type="text"
-            placeholder="City"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
-        </label>
-        <label>
-          State {errors.state && <span className="err">{errors.state}</span>}
-          <input
-            type="text"
-            placeholder="State"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-          />
-        </label>
-        <label>
-          Latitude {errors.lat && <span className="err">{errors.lat}</span>}
-          <input
-            type="number"
-            placeholder="Latitude"
-            value={lat}
-            onChange={(e) => setLat(e.target.value)}
-          />
-        </label>
-        <label>
-          Longitude {errors.lng && <span className="err">{errors.lng}</span>}
-          <input
-            type="number"
-            placeholder="Longitude"
-            value={lng}
-            onChange={(e) => setLng(e.target.value)}
-          />
-        </label>
+        <div>
+          <label className="location-input-city">
+            City {errors.city && <span className="err">{errors.city}</span>}
+            <input
+              type="text"
+              placeholder="City"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+          </label>
+          <label className="location-input-state">
+            State {errors.state && <span className="err">{errors.state}</span>}
+            <input
+              type="text"
+              placeholder="State"
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+            />
+          </label>
+        </div>
+        <div>
+          <label className="location-input-coords">
+            Latitude {errors.lat && <span className="err">{errors.lat}</span>}
+            <input
+              type="number"
+              placeholder="Latitude"
+              value={lat}
+              onChange={(e) => setLat(e.target.value)}
+            />
+          </label>
+          <label className="location-input-coords">
+            Longitude {errors.lng && <span className="err">{errors.lng}</span>}
+            <input
+              type="number"
+              placeholder="Longitude"
+              value={lng}
+              onChange={(e) => setLng(e.target.value)}
+            />
+          </label>
+        </div>
         <hr />
         <h2>Describe your place to guests</h2>
         <h3>
@@ -339,7 +344,7 @@ function CreateSpot() {
         )}
         <button>{id ? "Update Spot" : "Create Spot"}</button>
       </form>
-    </>
+    </div>
   );
 }
 

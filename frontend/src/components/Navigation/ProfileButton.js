@@ -48,7 +48,7 @@ function ProfileButton() {
       <>
         <li>Hello, {user.firstName}</li>
         <li>{user.email}</li>
-        <li>
+        <li id="manage-spots">
           <NavLink to="/spots/current" onClick={() => setDropdown(false)}>
             Manage Spots
           </NavLink>

@@ -44,11 +44,72 @@ h1,
 h2 {
   color: black;
   justify-content: flex-start;
-  margin: 0 10px;
+  /* margin: 0 10px; */
 }
 
 .spot-name {
   margin: 0 auto;
   width: 1400px;
   padding: 0 40px;
+}
+
+#reserve-panel {
+  border: 2px solid black;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 350px;
+  padding: 20px;
+}
+
+#reserve-panel > span {
+  font-size: 20px;
+}
+
+#reserve-panel > button {
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 10px;
+  background-color: #ff5a60;
+  box-shadow: 2px 2px black;
+  color: white;
+  font-size: 20px;
+}
+
+#spot-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+#spot-details > p {
+  max-width: 70%;
+}
+
+#review-content {
+  width: 1400px;
+  margin: 0 auto;
+}
+
+#avg-rating {
+  font-size: 25px;
+}
+
+.review-div {
+  margin: 50px 0;
+}
+
+.review-div > h3 {
+  font-size: 20px;
+}
+
+.review-div > h4 {
+  color: gray;
+  font-size: 16px;
+}
+
+.review-div > p {
+  margin-top: 5px;
 }

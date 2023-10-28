@@ -36,7 +36,7 @@ function SpotReviews({ id, avgRating, numReviews, ownerId, spotId }) {
 
   return (
     <>
-      <p>
+      <p id="avg-rating">
         <span>
           <i className="fa-solid fa-star"></i>
           {"  "}
@@ -53,15 +53,27 @@ function SpotReviews({ id, avgRating, numReviews, ownerId, spotId }) {
       <div className="reviews">
         {isNoReviews && <p>Be the first to post a review!</p>}
         {reviews.toReversed().map((review) => {
+          const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+          ];
+          const date = new Date(review.createdAt);
           return (
-            <div key={review.id}>
-              <h3>
-                {review?.User.firstName} {review?.User.lastName}
-              </h3>
-              <h4>{review.createdAt}</h4>
-              <span>
-                <i className="fa-solid fa-star"></i> {review.stars}
-              </span>
+            <div key={review.id} className="review-div">
+              <h3>{review?.User.firstName}</h3>
+              <h4>
+                {months[date.getMonth()]} {date.getFullYear()}
+              </h4>
               <p>{review.review}</p>
               {user?.id === review.User.id && (
                 <OpenModalButton
