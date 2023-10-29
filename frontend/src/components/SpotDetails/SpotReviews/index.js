@@ -52,7 +52,9 @@ function SpotReviews({ id, avgRating, numReviews, ownerId, spotId }) {
         />
       )}
       <div className="reviews">
-        {isNoReviews && <p>Be the first to post a review!</p>}
+        {isNoReviews && (
+          <p className="bottom-of-page">Be the first to post a review!</p>
+        )}
         {reviews.toReversed().map((review) => {
           const months = [
             "January",

@@ -75,6 +75,9 @@ hr {
 }
 
 .submit-button {
-  margin-bottom: 300px;
   margin-top: 30px;
+}
+
+.bottom-of-page {
+  margin-bottom: 300px;
 }
