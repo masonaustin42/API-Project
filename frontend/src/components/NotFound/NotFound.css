@@ -10,11 +10,6 @@
   z-index: -10;
 }
 
-h1,
-h2 {
-  animation: fadeIn 4s ease 1;
-}
-
 .d20,
 .d20 > img,
 .d20 > span {
@@ -45,6 +40,7 @@ h2 {
 }
 
 .fade-in {
+  animation: fadeIn 4s ease 1;
   text-align: center;
 }
 
