@@ -346,7 +346,7 @@ function CreateSpot() {
             {errors.img4 && <span className="err">{errors.img4}</span>}
           </>
         )}
-        <button className="submit-button">
+        <button className="submit-button bottom-of-page">
           {id ? "Update Spot" : "Create Spot"}
         </button>
       </form>
