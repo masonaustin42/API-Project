@@ -18,9 +18,9 @@ function SpotDetails() {
 
   let numReviews;
   if (spot.numReviews === 1) {
-    numReviews = "1 review";
+    numReviews = " · 1 review";
   } else if (spot.numReviews > 1) {
-    numReviews = `${spot.numReviews} reviews`;
+    numReviews = ` · ${spot.numReviews} reviews`;
   } else {
     numReviews = null;
   }
@@ -47,38 +47,41 @@ function SpotDetails() {
           )}
         </div>
       </div>
-      <div className="spot-details">
+      <div id="review-content">
         <h2>
           Hosted by {spot.Owner.firstName} {spot.Owner.lastName}
         </h2>
-        <p>{spot.description}</p>
-        <div className="reserve-panel">
-          <span>${spot.price}</span>
-          <span>
-            <i className="fa-solid fa-star"></i>
-            {"  "}
-            {spot.avgRating !== null
-              ? " · " + Number(spot.avgRating).toFixed(1)
-              : "new"}
-            {}
-            {numReviews}
-          </span>
-          <button
-            onClick={() => {
-              window.alert("Feature coming soon!");
-            }}
-          >
-            Reserve
-          </button>
+        <div id="spot-details">
+          <p>{spot.description}</p>
+          <div id="reserve-panel">
+            <span>${spot.price} night</span>
+            <span>
+              <i className="fa-solid fa-star"></i>
+              {"  "}
+              {spot.avgRating !== null
+                ? Number(spot.avgRating).toFixed(1)
+                : "new"}
+              {}
+              {numReviews}
+            </span>
+            <button
+              onClick={() => {
+                window.alert("Feature coming soon!");
+              }}
+            >
+              Reserve
+            </button>
+          </div>
         </div>
+        <hr />
+        <SpotReviews
+          id={id}
+          avgRating={spot.avgRating}
+          numReviews={numReviews}
+          ownerId={spot.ownerId}
+          spotId={spot.id}
+        />
       </div>
-      <SpotReviews
-        id={id}
-        avgRating={spot.avgRating}
-        numReviews={numReviews}
-        ownerId={spot.ownerId}
-        spotId={spot.id}
-      />
     </>
   );
 }

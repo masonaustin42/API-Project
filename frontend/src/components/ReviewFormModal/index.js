@@ -62,43 +62,44 @@ function ReviewFormModal() {
   return (
     <>
       <h2>How was your stay?</h2>
-      {Object.values(errors).length
-        ? Object.values(errors).map((err) => <p className="err">{err}</p>)
-        : null}
-      <div>
-        <form onSubmit={onSubmit}>
-          <textarea
-            placeholder="Leave your review here..."
-            value={description}
-            onChange={(e) => {
-              setDescription(e.target.value);
-            }}
-          />
-          {stars}
-          <div
-            className="star-container"
-            onMouseLeave={() => {
-              setFilledIn(0);
-            }}
-          >
-            {starValues.map((ele) => (
-              <input
-                key={ele}
-                type="radio"
-                name="stars"
-                value={ele}
-                checked={stars === ele}
-                onChange={changeStars}
-                onMouseEnter={() => {
-                  setFilledIn(ele);
-                }}
-                className={setClassName(ele)}
-              />
-            ))}
-          </div>
-          <button disabled={disableSubmit}>Submit Review</button>
-        </form>
+      <div className="error-container">
+        {Object.values(errors).length
+          ? Object.values(errors).map((err) => <p className="err">{err}</p>)
+          : null}
       </div>
+      <form onSubmit={onSubmit}>
+        <textarea
+          placeholder="Leave your review here..."
+          value={description}
+          onChange={(e) => {
+            setDescription(e.target.value);
+          }}
+        />
+        <div
+          className="star-container"
+          onMouseLeave={() => {
+            setFilledIn(0);
+          }}
+        >
+          {starValues.map((ele) => (
+            <input
+              key={ele}
+              type="radio"
+              name="stars"
+              value={ele}
+              checked={stars === ele}
+              onChange={changeStars}
+              onMouseEnter={() => {
+                setFilledIn(ele);
+              }}
+              className={setClassName(ele)}
+            />
+          ))}
+        </div>
+        <button disabled={disableSubmit} className="submit-button">
+          Submit Review
+        </button>
+      </form>
     </>
   );
 }

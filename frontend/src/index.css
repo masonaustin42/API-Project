@@ -30,3 +30,17 @@ nav {
   font: inherit;
   font-family: Roboto, Arial, Helvetica, sans-serif;
 }
+
+a,
+a:visited {
+  color: gray;
+  text-decoration: none;
+}
+
+a:hover {
+  color: black;
+}
+
+button:hover {
+  cursor: pointer;
+}

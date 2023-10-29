@@ -7,6 +7,7 @@ import { useModal } from "../../context/Modal";
 import LoginFormModal from "../LoginFormModal";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { getSpotDetails } from "../../store/currentSpot";
+import "./CreateSpot.css";
 
 function CreateSpot() {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ function CreateSpot() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (Object.values(currentSpot).length) {
+    if (Object.values(currentSpot).length && id) {
       setCountry(currentSpot.country);
       setAddress(currentSpot.address);
       setCity(currentSpot.city);
@@ -48,7 +49,7 @@ function CreateSpot() {
   const [lng, setLng] = useState(0);
   const [description, setDescription] = useState("");
   const [name, setName] = useState("");
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState("");
   const [previewImg, setPreviewImg] = useState("");
   const [img1, setImg1] = useState("");
   const [img2, setImg2] = useState("");
@@ -188,15 +189,15 @@ function CreateSpot() {
     }
   };
   return (
-    <>
-      <h1>Create a new Spot</h1>
+    <div id="create-spot">
+      <h1>{id ? "Update your Spot" : "Create a new Spot"}</h1>
       <form onSubmit={onSubmit}>
         <h2>Where's your place located?</h2>
         <h3>
           Guests will only get your exact address once they booked a
           reservation.
         </h3>
-        <label>
+        <label className="location-input">
           Country{" "}
           {errors.country && <span className="err">{errors.country}</span>}
           <input
@@ -206,7 +207,7 @@ function CreateSpot() {
             onChange={(e) => setCountry(e.target.value)}
           />
         </label>
-        <label>
+        <label className="location-input">
           Street Address{" "}
           {errors.address && <span className="err">{errors.address}</span>}
           <input
@@ -216,42 +217,48 @@ function CreateSpot() {
             onChange={(e) => setAddress(e.target.value)}
           />
         </label>
-        <label>
-          City {errors.city && <span className="err">{errors.city}</span>}
-          <input
-            type="text"
-            placeholder="City"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
-        </label>
-        <label>
-          State {errors.state && <span className="err">{errors.state}</span>}
-          <input
-            type="text"
-            placeholder="State"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-          />
-        </label>
-        <label>
-          Latitude {errors.lat && <span className="err">{errors.lat}</span>}
-          <input
-            type="number"
-            placeholder="Latitude"
-            value={lat}
-            onChange={(e) => setLat(e.target.value)}
-          />
-        </label>
-        <label>
-          Longitude {errors.lng && <span className="err">{errors.lng}</span>}
-          <input
-            type="number"
-            placeholder="Longitude"
-            value={lng}
-            onChange={(e) => setLng(e.target.value)}
-          />
-        </label>
+        <div className="input-container">
+          <label className="location-input-city">
+            City {errors.city && <span className="err">{errors.city}</span>}
+            <input
+              type="text"
+              placeholder="City"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+          </label>
+          <span>,</span>
+          <label className="location-input-state">
+            State {errors.state && <span className="err">{errors.state}</span>}
+            <input
+              type="text"
+              placeholder="State"
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+            />
+          </label>
+        </div>
+        <div className="input-container">
+          <label className="location-input-coords">
+            Latitude {errors.lat && <span className="err">{errors.lat}</span>}
+            <input
+              type="number"
+              placeholder="Latitude"
+              value={lat}
+              onChange={(e) => setLat(e.target.value)}
+            />
+          </label>
+          <span>,</span>
+          <label className="location-input-coords">
+            Longitude {errors.lng && <span className="err">{errors.lng}</span>}
+            <input
+              type="number"
+              placeholder="Longitude"
+              value={lng}
+              onChange={(e) => setLng(e.target.value)}
+            />
+          </label>
+        </div>
         <hr />
         <h2>Describe your place to guests</h2>
         <h3>
@@ -285,13 +292,15 @@ function CreateSpot() {
           Competitive pricing can help your listing stand out and rank higher in
           search results.
         </h3>
-        $
-        <input
-          type="number"
-          placeholder="Price per night (USD)"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
+        <div className="input-container">
+          <span>$</span>
+          <input
+            type="number"
+            placeholder="Price per night (USD)"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+        </div>
         {errors.price && <span className="err">{errors.price}</span>}
         {!id && (
           <>
@@ -337,9 +346,11 @@ function CreateSpot() {
             {errors.img4 && <span className="err">{errors.img4}</span>}
           </>
         )}
-        <button>{id ? "Update Spot" : "Create Spot"}</button>
+        <button className="submit-button">
+          {id ? "Update Spot" : "Create Spot"}
+        </button>
       </form>
-    </>
+    </div>
   );
 }
 

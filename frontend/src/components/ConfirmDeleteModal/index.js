@@ -33,8 +33,12 @@ function ConfirmDeleteModal({ id }) {
           ? Object.values(errors).map((err) => <p className="err">{err}</p>)
           : null}
         <div>
-          <button onClick={confirmDelete}>Yes (Remove Spot)</button>
-          <button onClick={confirmKeep}>No (Keep Spot)</button>
+          <button onClick={confirmDelete} className="confirm">
+            Yes (Remove Spot)
+          </button>
+          <button onClick={confirmKeep} className="no-confirm">
+            No (Keep Spot)
+          </button>
         </div>
       </div>
     </>
