@@ -65,6 +65,14 @@ function SignupFormModal() {
   return (
     <>
       <h2>Sign Up</h2>
+      <div className="error-container">
+        {<p className="err">{errors.username || " "}</p>}
+        {<p className="err">{errors.firstName || " "}</p>}
+        {<p className="err">{errors.lastName || " "}</p>}
+        {<p className="err">{errors.email || " "}</p>}
+        {<p className="err">{errors.password}</p>}
+        {<p className="err">{errors.passwordConfirm || " "}</p>}
+      </div>
       <div className="form-container">
         <form onSubmit={onSubmit}>
           <label>
@@ -76,7 +84,6 @@ function SignupFormModal() {
               required
             />
           </label>
-          {<p className="err">{errors.username || " "}</p>}
           <label>
             First Name:
             <input
@@ -86,7 +93,6 @@ function SignupFormModal() {
               required
             />
           </label>
-          {<p className="err">{errors.firstName || " "}</p>}
           <label>
             Last Name:
             <input
@@ -96,7 +102,6 @@ function SignupFormModal() {
               required
             />
           </label>
-          {<p className="err">{errors.lastName || " "}</p>}
           <label>
             Email:
             <input
@@ -106,7 +111,6 @@ function SignupFormModal() {
               required
             />
           </label>
-          {<p className="err">{errors.email || " "}</p>}
           <label>
             Password:
             <input
@@ -116,7 +120,6 @@ function SignupFormModal() {
               required
             />
           </label>
-          {<p className="err">{errors.password}</p>}
           <label>
             Confirm Password:
             <input
@@ -126,8 +129,9 @@ function SignupFormModal() {
               required
             />
           </label>
-          {<p className="err">{errors.passwordConfirm || " "}</p>}
-          <button disabled={submitDisabled}>Create Account</button>
+          <button disabled={submitDisabled} className="submit-button">
+            Create Account
+          </button>
         </form>
       </div>
     </>

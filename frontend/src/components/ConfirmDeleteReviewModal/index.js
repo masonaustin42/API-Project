@@ -27,15 +27,19 @@ function ConfirmDeleteReviewModal({ reviewId, spotId }) {
   return (
     <>
       <h2>Confirm Delete</h2>
-      <div>
-        <h3>Are you sure you want to remove this review?</h3>
+      <h3>Are you sure you want to remove this review?</h3>
+      <div className="error-container">
         {Object.values(errors).length
           ? Object.values(errors).map((err) => <p className="err">{err}</p>)
           : null}
-        <div>
-          <button onClick={confirmDelete}>Yes (Remove Review)</button>
-          <button onClick={confirmKeep}>No (Keep Review)</button>
-        </div>
+      </div>
+      <div>
+        <button onClick={confirmDelete} className="confirm">
+          Yes (Remove Review)
+        </button>
+        <button onClick={confirmKeep} className="no-confirm">
+          No (Keep Review)
+        </button>
       </div>
     </>
   );

@@ -1,5 +1,13 @@
 h1 {
-  margin: auto;
+  margin: 20px auto;
+}
+
+h2 {
+  font-size: 40px;
+}
+
+h3 {
+  font-size: 20px;
 }
 
 #create-spot {
@@ -9,9 +17,31 @@ h1 {
   margin: 0 auto;
 }
 
-#create-spot > form {
+#create-spot > h1 {
+  margin-left: 0;
+}
+
+form,
+label {
   display: flex;
   flex-direction: column;
+}
+
+label,
+input,
+textarea {
+  font-size: 20px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+
+.input-container > span {
+  font-size: 25px;
+  margin: 0 5px;
 }
 
 .location-input > input {
@@ -24,4 +54,27 @@ h1 {
 
 .location-input-state {
   width: 20%;
+}
+
+.location-input-coords {
+  width: 50%;
+}
+
+form > * {
+  margin: 5px 0;
+}
+
+hr {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.err {
+  justify-content: flex-start;
+  font-size: 20px;
+}
+
+.submit-button {
+  margin-bottom: 300px;
+  margin-top: 30px;
 }

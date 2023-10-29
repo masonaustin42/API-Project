@@ -36,7 +36,9 @@ function LoginFormModal() {
       <h2>Log In</h2>
       <div className="form-container">
         <form onSubmit={onSubmit}>
-          <div>{<p className="err">{errors.credential || " "}</p>}</div>
+          <div className="error-container">
+            {<p className="err">{errors.credential || " "}</p>}
+          </div>
 
           <label>
             Username or Email:
@@ -56,9 +58,12 @@ function LoginFormModal() {
               required
             />
           </label>
-          <button disabled={buttonDisabled}>Log In</button>
+          <button disabled={buttonDisabled} className="submit-button">
+            Log In
+          </button>
 
           <button
+            className="demo-user-button"
             onClick={(e) => {
               e.preventDefault();
               return dispatch(

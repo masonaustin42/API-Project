@@ -46,6 +46,7 @@ function SpotReviews({ id, avgRating, numReviews, ownerId, spotId }) {
       </p>
       {reviewButton && (
         <OpenModalButton
+          cssClass="review-button"
           buttonText="Post Your Review"
           modalComponent={<ReviewFormModal />}
         />
@@ -78,6 +79,7 @@ function SpotReviews({ id, avgRating, numReviews, ownerId, spotId }) {
               {user?.id === review.User.id && (
                 <OpenModalButton
                   buttonText="Delete Review"
+                  cssClass="gray-button"
                   modalComponent={
                     <ConfirmDeleteReviewModal
                       spotId={spotId}

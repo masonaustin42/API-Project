@@ -217,7 +217,7 @@ function CreateSpot() {
             onChange={(e) => setAddress(e.target.value)}
           />
         </label>
-        <div>
+        <div className="input-container">
           <label className="location-input-city">
             City {errors.city && <span className="err">{errors.city}</span>}
             <input
@@ -227,6 +227,7 @@ function CreateSpot() {
               onChange={(e) => setCity(e.target.value)}
             />
           </label>
+          <span>,</span>
           <label className="location-input-state">
             State {errors.state && <span className="err">{errors.state}</span>}
             <input
@@ -237,7 +238,7 @@ function CreateSpot() {
             />
           </label>
         </div>
-        <div>
+        <div className="input-container">
           <label className="location-input-coords">
             Latitude {errors.lat && <span className="err">{errors.lat}</span>}
             <input
@@ -247,6 +248,7 @@ function CreateSpot() {
               onChange={(e) => setLat(e.target.value)}
             />
           </label>
+          <span>,</span>
           <label className="location-input-coords">
             Longitude {errors.lng && <span className="err">{errors.lng}</span>}
             <input
@@ -290,13 +292,15 @@ function CreateSpot() {
           Competitive pricing can help your listing stand out and rank higher in
           search results.
         </h3>
-        $
-        <input
-          type="number"
-          placeholder="Price per night (USD)"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
+        <div className="input-container">
+          <span>$</span>
+          <input
+            type="number"
+            placeholder="Price per night (USD)"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+        </div>
         {errors.price && <span className="err">{errors.price}</span>}
         {!id && (
           <>
@@ -342,7 +346,9 @@ function CreateSpot() {
             {errors.img4 && <span className="err">{errors.img4}</span>}
           </>
         )}
-        <button>{id ? "Update Spot" : "Create Spot"}</button>
+        <button className="submit-button">
+          {id ? "Update Spot" : "Create Spot"}
+        </button>
       </form>
     </div>
   );

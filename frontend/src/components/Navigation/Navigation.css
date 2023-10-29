@@ -92,3 +92,11 @@ ul {
   color: black;
   box-shadow: 0px 0px 4px lightgray;
 }
+
+button > i {
+  font-size: 20px;
+}
+
+button {
+  font-size: 16px;
+}
